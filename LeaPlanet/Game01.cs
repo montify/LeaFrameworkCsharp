@@ -6,7 +6,7 @@ using LeaFramework.Graphics;
 using PlayGround;
 using SharpDX;
 using SharpDX.Direct3D11;
-using Color = SharpDX.Color;
+using SharpDX.Mathematics;
 
 namespace LeaFramework.PlayGround
 {
@@ -17,9 +17,6 @@ namespace LeaFramework.PlayGround
 		private RasterizerState1 rs, rs1;
 		private RenderTarget2D rt;
 		private ShaderResourceView tex, tex1 ;
-
-		private ContentManager cManager;
-
 		private SpriteBatch spriteBatch;
 
 		private float x;

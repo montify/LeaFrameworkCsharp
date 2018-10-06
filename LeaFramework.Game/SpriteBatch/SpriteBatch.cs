@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 using LeaFramework.Effect;
 using LeaFramework.Game.Properties;
 using LeaFramework.Graphics;
 using LeaFramework.Graphics.VertexStructs;
 using SharpDX;
-using SharpDX.D3DCompiler;
-using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
+
 
 namespace LeaFramework.Game.SpriteBatch
 {
