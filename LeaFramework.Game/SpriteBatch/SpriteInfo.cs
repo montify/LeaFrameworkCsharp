@@ -10,6 +10,5 @@ namespace LeaFramework.Game.SpriteBatch
 		public Vector4 color;
 		public ShaderResourceView srv;
 		public int textureID;
-
 	}
 }

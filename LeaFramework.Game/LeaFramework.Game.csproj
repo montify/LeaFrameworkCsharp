@@ -79,6 +79,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SpriteBatch\RenderBatch.cs" />
+    <Compile Include="SpriteBatch\SortMode.cs" />
     <Compile Include="SpriteBatch\SpriteBatch.cs" />
     <Compile Include="SpriteBatch\SpriteInfo.cs" />
   </ItemGroup>

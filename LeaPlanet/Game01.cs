@@ -78,11 +78,13 @@ namespace LeaFramework.PlayGround
 			GraphicsDevice.Clear(ClearFlags.RenderTarget | ClearFlags.DepthBuffer, new Color(new Vector3(r,g,b)));
 			GraphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.Rasterizer.State = rs;
 
-			//triangle.Render(Color.Red.ToVector3());
-			
+			triangle.Render(Color.Red.ToVector3());
+			x += 0.01f;
+
 			spriteBatch.Begin();
-			spriteBatch.Submit(tex, new Vector2(0, 0), new Vector2(50, 50), Color.Red.ToVector4());
-			spriteBatch.Submit(tex1, new Vector2(300, 0), new Vector2(50, 50), Color.Green.ToVector4());
+			spriteBatch.Submit(tex1, new Vector2(0, 0), new Vector2(GraphicsDevice.ViewPort.Width,50), Color.Red.ToVector4());
+			spriteBatch.Submit(tex, new Vector2(0, 50), new Vector2(100, GraphicsDevice.ViewPort.Height - 60), Color.Green.ToVector4());
+			
 			spriteBatch.End();
 		}
 
