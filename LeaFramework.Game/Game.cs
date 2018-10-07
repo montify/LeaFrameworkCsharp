@@ -25,30 +25,8 @@ namespace LeaPlanet.src
 
 		protected Game()
 		{
+
 			
-			#region FreeType
-			/*	Library library = new Library();
-				Face face = new Face(library, "calibri.ttf");
-				face.SetCharSize(0, 50, 72, 72);
-
-				string allChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!§$%&/()=?`´^-_.,;:<>";
-
-				for (int i = 0; i < allChars.Length; i++)
-				{
-					var x = face.GetCharIndex(allChars[i]);
-					face.LoadGlyph(x, LoadFlags.Default, LoadTarget.Normal);
-					face.Glyph.RenderGlyph(RenderMode.Normal);
-
-
-					FTBitmap bm = face.Glyph.Bitmap;
-
-					var xa = bm.ToGdipBitmap(System.Drawing.Color.AliceBlue);
-
-					xa.Save(allChars[i]+".bmp");
-
-				}
-				*/
-			#endregion
 		}
 
 		protected void Init()

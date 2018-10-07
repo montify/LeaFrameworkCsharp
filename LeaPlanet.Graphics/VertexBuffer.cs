@@ -70,9 +70,9 @@ namespace LeaFramework.Graphics
 
 			graphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.MapSubresource(buffer, MapMode.WriteDiscard, MapFlags.None, out var dataBox);
 
-			Utilities.Write(dataBox.DataPointer, vertices, offset, vertices.Length );
+			Utilities.Write(dataBox.DataPointer, vertices, offset, vertices.Length);
 		
-			graphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.UnmapSubresource(buffer,0);
+			graphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.UnmapSubresource(buffer, 0);
 		}
 
 		public void Dispose()

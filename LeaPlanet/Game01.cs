@@ -53,6 +53,9 @@ namespace LeaFramework.PlayGround
 			};
 
 			rs = new RasterizerState1(GraphicsDevice.NatiDevice1.D3D11Device, desc);
+
+
+		
 		}
 
 		public override void Unload()
@@ -82,9 +85,10 @@ namespace LeaFramework.PlayGround
 			x += 0.01f;
 
 			spriteBatch.Begin();
-			spriteBatch.Submit(tex1, new Vector2(0, 0), new Vector2(GraphicsDevice.ViewPort.Width,50), Color.Red.ToVector4());
-			spriteBatch.Submit(tex, new Vector2(0, 50), new Vector2(100, GraphicsDevice.ViewPort.Height - 60), Color.Green.ToVector4());
-			
+			spriteBatch.Submit(tex, new Vector2(0, 0), new Vector2(32,36), Color.Red.ToVector4());
+			//spriteBatch.Submit(tex, new Vector2(0, 0), new Vector2(200, 200), Color.Green.ToVector4());
+			spriteBatch.SubmitString("hallo-wasgehtab<>?", new Vector2(100,100));
+			spriteBatch.SubmitString("geiler", new Vector2(100, 200));
 			spriteBatch.End();
 		}
 

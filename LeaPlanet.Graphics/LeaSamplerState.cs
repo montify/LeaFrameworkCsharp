@@ -19,9 +19,9 @@ namespace LeaFramework.Graphics
 		{
 			var samplerStateDescription = new SamplerStateDescription
 			{
-				AddressU = TextureAddressMode.Clamp,
-				AddressV = TextureAddressMode.Clamp,
-				AddressW = TextureAddressMode.Clamp,
+				AddressU = TextureAddressMode.Wrap,
+				AddressV = TextureAddressMode.Wrap,
+				AddressW = TextureAddressMode.Wrap,
 				Filter = Filter.MinMagMipLinear
 			};
 

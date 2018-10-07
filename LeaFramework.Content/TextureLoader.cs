@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using SharpDX.Direct2D1;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using SharpDX.WIC;
+using Bitmap = SharpDX.Direct2D1.Bitmap;
 using Device = SharpDX.Direct3D11.Device;
 using DeviceContext = SharpDX.Direct2D1.DeviceContext;
 using PixelFormat = SharpDX.WIC.PixelFormat;
@@ -21,16 +23,6 @@ namespace LeaFramework.Content
 
 		private static readonly ImagingFactory Imgfactory = new ImagingFactory();
 
-		private static Bitmap1 LoadBitmap(string filename, DeviceContext context)
-		{
-			var props = new BitmapProperties1
-			{
-				PixelFormat =
-					new SharpDX.Direct2D1.PixelFormat(Format.R8G8B8A8_UNorm, SharpDX.Direct2D1.AlphaMode.Premultiplied)
-			};
-
-			return Bitmap1.FromWicBitmap(context, LoadBitmap(filename), props);
-		}
 
 		private static BitmapSource LoadBitmap(string filename)
 		{
@@ -40,6 +32,7 @@ namespace LeaFramework.Content
 				DecodeOptions.CacheOnDemand
 			);
 
+			
 			var frame = d.GetFrame(0);
 
 			var fconv = new FormatConverter(Imgfactory);
@@ -60,6 +53,7 @@ namespace LeaFramework.Content
 
 		private static Texture2D CreateTex2DFromBitmap(Device device, BitmapSource bsource)
 		{
+
 			Texture2DDescription desc;
 			desc.Width = bsource.Size.Width;
 			desc.Height = bsource.Size.Height;
@@ -77,7 +71,7 @@ namespace LeaFramework.Content
 			bsource.CopyPixels(bsource.Size.Width * 4, s);
 
 			var rect = new DataRectangle(s.DataPointer, bsource.Size.Width * 4);
-
+		
 			var t2D = new Texture2D(device, desc, rect);
 
 			return t2D;
