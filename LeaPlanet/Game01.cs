@@ -88,8 +88,8 @@ namespace LeaFramework.PlayGround
 			var sd = x.ToString();
 			spriteFont.Begin();
 			spriteFont.SubmitString(sd, new Vector2(100, 500));
-			spriteFont.SubmitString("Hallo was geht ab bei dir?", new Vector2(100, 100));
-			spriteFont.SubmitString(" WhiteSpace funktioniert noch nicht so richtig ", new Vector2(100, 200));
+			spriteFont.SubmitString("LeaFramework v00000 xD", new Vector2(100, 100));
+			spriteFont.SubmitString(":D hehe", new Vector2(100, 200));
 			spriteFont.SubmitString("!#$%&'()*+,-./0123456789:;<=>?@", new Vector2(100, 300));
 			spriteFont.SubmitString("[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~", new Vector2(100, 400));
 			spriteFont.Draw();
