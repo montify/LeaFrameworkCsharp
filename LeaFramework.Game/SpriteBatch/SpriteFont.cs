@@ -34,13 +34,14 @@ namespace LeaFramework.Game.SpriteBatch
 		private ShaderResourceView textureAtlasSRV;
 		private List<SpriteInfo> spriteInfoList = new List<SpriteInfo>();
 		private BlendState blendState, blendStateNormal;
+		private FontVertex[] vertices;
 
-		public SpriteFont(GraphicsDevice graphicsDevice)
+		public SpriteFont(GraphicsDevice graphicsDevice,string fontName, int fontSize)
 		{
 			this.graphicsDevice = graphicsDevice;
-			textureAtlas = new Bitmap(512,512);
-			CreateGlyphs();
-
+			textureAtlas = new Bitmap(512, 512);
+			CreateGlyphs(fontName, fontSize);
+		
 			var vertexShaderSource = Resources.vertexShaderFont;
 			var geometryShaderSource = Resources.geometryShaderFont;
 			var pixelShaderSource = Resources.pixelShaderFont;
@@ -57,6 +58,9 @@ namespace LeaFramework.Game.SpriteBatch
 			};
 
 			effect = new LeaEffect(graphicsDevice, createInfo);
+
+			sampler = new LeaSamplerState();
+			sampler.GenerateSamplers(graphicsDevice);
 
 			var desc = new BlendStateDescription();
 			desc.RenderTarget[0].IsBlendEnabled = true;
@@ -76,17 +80,17 @@ namespace LeaFramework.Game.SpriteBatch
 		}
 
 
-		public void CreateGlyphs()
+		public void CreateGlyphs(string fontName, int fontSize)
 		{
 			Library library = new Library();
-			face = new Face(library, "OpenSans-Regular.ttf");
-			face.SetCharSize(0, 25, 72, 72);
+			face = new Face(library, fontName);
+			face.SetCharSize(0, fontSize, 72, 72);
 
-			string allChars =
-				"!#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+			string allChars = "!#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
 			int offsetX = 0;
 			int offsetY = 0;
+
 			for (int i = 0; i < allChars.Length; i++)
 			{
 				var x = face.GetCharIndex(allChars[i]);
@@ -122,26 +126,24 @@ namespace LeaFramework.Game.SpriteBatch
 						OptionFlags = ResourceOptionFlags.None,
 						SampleDescription = new SampleDescription(1, 0),
 					}, new DataRectangle(data.Scan0, data.Stride));
+
 					textureAtlas.UnlockBits(data);
 
-
 					textureAtlasSRV = new ShaderResourceView(graphicsDevice.NatiDevice1.D3D11Device, ret);
-
 
 					GlyphList.Add(x,
 						new Glyph(gdiBitmap.Width, gdiBitmap.Height, face.Glyph.Metrics,
 							new Vector2(offsetX, offsetY)));
 
+					//IF roughly rach the Bitmap border, make a new Line
 					if (offsetX > 450)
 					{
 						offsetY += 70;
 						offsetX = 0;
 					}
 
+					// +4 because Spacing between Characters in the Bitmap
 					offsetX += face.Glyph.Advance.X.ToInt32() + 4;
-				
-
-
 			}
 		}
 
@@ -168,7 +170,7 @@ namespace LeaFramework.Game.SpriteBatch
 				var character = face.GetCharIndex(str[i]);
 			
 				//if Character != WhiteSpace
-				if (character != 3)
+				if (character != face.GetCharIndex(' '))
 				{
 					var metrics = GlyphList[character].metrics;
 					var xpos = position.X + metrics.HorizontalBearingX.ToSingle();
@@ -202,7 +204,7 @@ namespace LeaFramework.Game.SpriteBatch
 		{
 			graphicsDevice.SetTopology(PrimitiveTopology.PointList);
 
-			graphicsDevice.SetVertexBuffer(vertexBuffer);
+		
 			graphicsDevice.SetblendState(blendState);
 
 			//TODO: MAX BATCH SIZE NOT * 2
@@ -219,12 +221,13 @@ namespace LeaFramework.Game.SpriteBatch
 				vertexBuffer.CreateAndSetData(vertices);
 			}
 
+			graphicsDevice.SetVertexBuffer(vertexBuffer);
 			vertexBuffer.UpdateBuffer(vertices, 0);
 
 			graphicsDevice.SetVertexBuffer(vertexBuffer);
 
 			effect.SetVariable("ProjMatrix", "perFrame", MVP, ShaderType.GeometryShader);
-
+			effect.SetSampler(sampler, 0 , ShaderType.PixelShader);
 			effect.SetTexture(textureAtlasSRV, 0, ShaderType.PixelShader);
 			effect.Apply();
 

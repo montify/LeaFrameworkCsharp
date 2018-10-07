@@ -18,14 +18,14 @@ namespace LeaFramework.PlayGround
 		private RenderTarget2D rt;
 		private ShaderResourceView tex, tex1 ;
 		private SpriteBatch spriteBatch;
-		private SpriteFont spriteFont;
+		private SpriteFont spriteFont, spriteFont1;
 
 		private float x;
 
 		public Game01()
 		{
 			WindowTitle = "Framework ALEX 0.01";
-			IsVSyncEnable = true;
+			IsVSyncEnable = false;
 			
 			WindowWidth = 1280;
 			WindowHeight = 720;
@@ -39,7 +39,8 @@ namespace LeaFramework.PlayGround
 			triangle = new Triangle(GraphicsDevice);
 
 			spriteBatch = new SpriteBatch(GraphicsDevice);
-			spriteFont = new SpriteFont(GraphicsDevice);
+			spriteFont = new SpriteFont(GraphicsDevice, "orange.ttf", 50);
+			spriteFont1 = new SpriteFont(GraphicsDevice, "OpenSans-Regular.ttf", 50);
 			ContentManager.Instance.rootDictionary = "Content";
 
 			ContentManager.Instance.LoadTexture(GraphicsDevice, "Content//uvTestTex.png");
@@ -86,13 +87,24 @@ namespace LeaFramework.PlayGround
 
 			x += 1;
 			var sd = x.ToString();
+
+			
 			spriteFont.Begin();
-			spriteFont.SubmitString(sd, new Vector2(100, 500));
 			spriteFont.SubmitString("LeaFramework v00000 xD", new Vector2(100, 100));
-			spriteFont.SubmitString(":D hehe", new Vector2(100, 200));
-			spriteFont.SubmitString("!#$%&'()*+,-./0123456789:;<=>?@", new Vector2(100, 300));
-			spriteFont.SubmitString("[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~", new Vector2(100, 400));
+			spriteFont.SubmitString("[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~", new Vector2(100, 500));
+		//	spriteFont.SubmitString(sd, new Vector2(100, 600));
 			spriteFont.Draw();
+
+			spriteFont1.Begin();
+			spriteFont1.SubmitString(":D Different TrueType Fonts supportet", new Vector2(100, 200));
+			spriteFont1.SubmitString("GaH:;<=>?@ {a}", new Vector2(100, 300));
+			spriteFont1.SubmitString(":D Different TrueType Fonts supportet", new Vector2(100, 400));
+			//spriteFont1.SubmitString(sd, new Vector2(100, 650));
+			spriteFont1.Draw();
+
+
+
+
 		}
 
 	}
