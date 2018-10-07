@@ -24,7 +24,7 @@ namespace LeaFramework.PlayGround
 		public Game01()
 		{
 			WindowTitle = "Framework ALEX 0.01";
-			IsVSyncEnable = false;
+			IsVSyncEnable = true;
 			
 			WindowWidth = 1280;
 			WindowHeight = 720;
@@ -82,13 +82,13 @@ namespace LeaFramework.PlayGround
 			GraphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.Rasterizer.State = rs;
 
 			triangle.Render(Color.Red.ToVector3());
-			x += 0.01f;
+			x += 1;
 
 			spriteBatch.Begin();
 			spriteBatch.Submit(tex, new Vector2(0, 0), new Vector2(32,36), Color.Red.ToVector4());
-			//spriteBatch.Submit(tex, new Vector2(0, 0), new Vector2(200, 200), Color.Green.ToVector4());
-			spriteBatch.SubmitString("hallo-wasgehtab<>?", new Vector2(100,100));
-			spriteBatch.SubmitString("geiler", new Vector2(100, 200));
+		    spriteBatch.Submit(tex, new Vector2(0, 0), new Vector2(200, 200), Color.Green.ToVector4());
+			spriteBatch.SubmitString(x.ToString(), new Vector2(100,100));
+			spriteBatch.SubmitString("aaaaaaaaaaaaaaa", new Vector2(100, 200));
 			spriteBatch.End();
 		}
 

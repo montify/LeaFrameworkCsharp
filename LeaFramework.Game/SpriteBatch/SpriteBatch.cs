@@ -34,6 +34,8 @@ namespace LeaFramework.Game.SpriteBatch
 		private Dictionary<uint, Glyph> GlypList = new Dictionary<uint, Glyph>();
 		private SortMode sortMode;
 		private Face face;
+		private BlendState blendState, blendStateNormal;
+
 		public SpriteBatch(GraphicsDevice graphicsDevice, int maxBatchSize = 1024)
 		{
 			this.graphicsDevice = graphicsDevice;		
@@ -61,6 +63,22 @@ namespace LeaFramework.Game.SpriteBatch
 			effect = new LeaEffect(graphicsDevice, createInfo);
 
 			CreateGlyphs();
+
+			var desc = new BlendStateDescription();
+			desc.RenderTarget[0].IsBlendEnabled = true;
+			desc.RenderTarget[0].SourceBlend  = BlendOption.One;
+			desc.RenderTarget[0].DestinationBlend = BlendOption.InverseSourceAlpha;
+			desc.RenderTarget[0].BlendOperation = BlendOperation.Add;
+			desc.RenderTarget[0].SourceAlphaBlend = BlendOption.One;
+			desc.RenderTarget[0].DestinationAlphaBlend = BlendOption.Zero;
+			desc.RenderTarget[0].AlphaBlendOperation = BlendOperation.Add;
+			desc.RenderTarget[0].RenderTargetWriteMask = ColorWriteMaskFlags.All;
+
+			blendState = new BlendState(graphicsDevice.NatiDevice1.D3D11Device, desc);
+			desc.RenderTarget[0].DestinationBlend = BlendOption.Zero;
+
+			blendStateNormal = new BlendState(graphicsDevice.NatiDevice1.D3D11Device, desc);
+
 		}
 
 		public void CreateGlyphs()
@@ -73,8 +91,11 @@ namespace LeaFramework.Game.SpriteBatch
 			string allChars = "!#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 			//string allChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
+			
 			for (int i = 0; i < allChars.Length; i++)
 			{
+				Console.WriteLine(allChars[i]);
+
 				var x = face.GetCharIndex(allChars[i]);
 				face.LoadGlyph(x, LoadFlags.Render, LoadTarget.Normal);
 				face.Glyph.RenderGlyph(RenderMode.Normal);
@@ -83,6 +104,7 @@ namespace LeaFramework.Game.SpriteBatch
 					
 				
 				//###################
+				
 				var gdiBitmap = bm.ToGdipBitmap(Color.White);
 				var data = gdiBitmap.LockBits(new System.Drawing.Rectangle(0, 0, gdiBitmap.Width, gdiBitmap.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
@@ -108,6 +130,7 @@ namespace LeaFramework.Game.SpriteBatch
 
 			}
 
+			Console.WriteLine();
 			#endregion
 		}
 
@@ -131,7 +154,6 @@ namespace LeaFramework.Game.SpriteBatch
 
 		public void SubmitString(string str, Vector2 position)
 		{
-
 			for (int i = 0; i < str.Length; i++)
 			{
 				var c = face.GetCharIndex(str[i]);
@@ -208,19 +230,20 @@ namespace LeaFramework.Game.SpriteBatch
 			graphicsDevice.SetTopology(PrimitiveTopology.PointList);
 
 			graphicsDevice.SetVertexBuffer(vertexBuffer);
+			graphicsDevice.SetblendState(blendState);
 
 			foreach (var rb in renderBatches)
 			{
 				effect.SetVariable("ProjMatrix", "perFrame", MVP, ShaderType.GeometryShader);
 
 				effect.SetTexture(rb.texture, 0, ShaderType.PixelShader);
-			//	effect.SetTexture(GlypList[0].texture, 0, ShaderType.PixelShader);
 				effect.SetSampler(sampler, 0, ShaderType.PixelShader);
 
 				effect.Apply();
 
 				graphicsDevice.Draw(rb.numVertices, rb.offset);
 			}
+			graphicsDevice.SetblendState(blendStateNormal);
 		}
 
 		public void Dispose()

@@ -54,7 +54,7 @@ namespace LeaFramework.Graphics
 				else
 				{
 					buffer = Buffer.Create(graphicsDevice.NatiDevice1.D3D11Device, BindFlags.VertexBuffer, vertices,
-						Utilities.SizeOf(vertices) * vertices.Length, ResourceUsage.Dynamic,
+						Utilities.SizeOf(vertices) , ResourceUsage.Dynamic,
 						CpuAccessFlags.Write);
 				
 				}

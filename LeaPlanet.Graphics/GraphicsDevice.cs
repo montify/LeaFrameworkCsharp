@@ -219,6 +219,11 @@ namespace LeaFramework.Graphics
 			SetViewPort(ViewPort);
 		}
 
+		public void SetblendState(BlendState blendState)
+		{
+			nativeDevice.D3D11Device.ImmediateContext1.OutputMerger.SetBlendState(blendState);
+		}
+
 		public void Present(bool isVSyncEbable)
 		{
 			IsShaderSwitchHappen = false;

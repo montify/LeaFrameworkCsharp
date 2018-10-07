@@ -13,7 +13,7 @@ struct PS_IN
 float4 PSMain(PS_IN input) : SV_Target
 {
     int x = input.TextureID;
-    float3 t = tex.Sample(samp, input.UVCoordinate, 0);
-
-    return float4(t,1);
+    float4 t = tex.Sample(samp, input.UVCoordinate);
+    
+    return t;
 }
