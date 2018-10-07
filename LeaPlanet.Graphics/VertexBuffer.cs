@@ -27,20 +27,6 @@ namespace LeaFramework.Graphics
 		}
 
 
-		public void CreateBuffer(int sizeInBytes)
-		{
-			bufferDesc = new BufferDescription
-			{
-				CpuAccessFlags = CpuAccessFlags.None,
-				BindFlags = BindFlags.VertexBuffer,
-				SizeInBytes = sizeInBytes,
-				Usage = ResourceUsage.Default
-			};
-			
-			buffer = new Buffer(graphicsDevice.NatiDevice1.D3D11Device, bufferDesc);
-
-		}
-
 		public void CreateAndSetData<T>(T[] vertices) where T : struct
 		{
 	
@@ -58,6 +44,7 @@ namespace LeaFramework.Graphics
 						CpuAccessFlags.Write);
 				
 				}
+
 				buffer.DebugName = debugName;
 				VertexBufferBinding = new VertexBufferBinding(buffer, Utilities.SizeOf<T>(), 0);
 			}

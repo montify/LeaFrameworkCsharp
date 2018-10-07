@@ -62,7 +62,7 @@ namespace LeaFramework.Game.SpriteBatch
 
 			effect = new LeaEffect(graphicsDevice, createInfo);
 
-			CreateGlyphs();
+		//	CreateGlyphs();
 
 			var desc = new BlendStateDescription();
 			desc.RenderTarget[0].IsBlendEnabled = true;
@@ -81,59 +81,7 @@ namespace LeaFramework.Game.SpriteBatch
 
 		}
 
-		public void CreateGlyphs()
-		{
-			#region FreeType
-			Library library = new Library();
-			 face = new Face(library, "OpenSans-Regular.ttf");
-			face.SetCharSize(0, 50, 72, 72);
-			
-			string allChars = "!#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
-			//string allChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-
-			
-			for (int i = 0; i < allChars.Length; i++)
-			{
-				Console.WriteLine(allChars[i]);
-
-				var x = face.GetCharIndex(allChars[i]);
-				face.LoadGlyph(x, LoadFlags.Render, LoadTarget.Normal);
-				face.Glyph.RenderGlyph(RenderMode.Normal);
-				
-				FTBitmap bm = face.Glyph.Bitmap;
-					
-				
-				//###################
-				
-				var gdiBitmap = bm.ToGdipBitmap(Color.White);
-				var data = gdiBitmap.LockBits(new System.Drawing.Rectangle(0, 0, gdiBitmap.Width, gdiBitmap.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-
-				var ret = new Texture2D(graphicsDevice.NatiDevice1.D3D11Device, new Texture2DDescription()
-				{
-					Width = gdiBitmap.Width,
-					Height = gdiBitmap.Height,
-					ArraySize = 1,
-					BindFlags = BindFlags.ShaderResource,
-					Usage = ResourceUsage.Immutable,
-					CpuAccessFlags = CpuAccessFlags.None,
-					Format = Format.B8G8R8A8_UNorm,
-					MipLevels = 1,
-					OptionFlags = ResourceOptionFlags.None,
-					SampleDescription = new SampleDescription(1, 0),
-				}, new DataRectangle(data.Scan0, data.Stride));
-				gdiBitmap.UnlockBits(data);
-				//###################
-
-				var srv = new ShaderResourceView(graphicsDevice.NatiDevice1.D3D11Device, ret);
-				var me = face.Glyph.Metrics;
-				GlypList.Add(x, new Glyph(srv, gdiBitmap.Width, gdiBitmap.Height, face.Glyph.Metrics));
-
-			}
-
-			Console.WriteLine();
-			#endregion
-		}
-
+		
 		public void Begin(SortMode sortMode = SortMode.Texture)
 		{
 			spriteList.Clear();
@@ -152,33 +100,32 @@ namespace LeaFramework.Game.SpriteBatch
 		}
 
 
-		public void SubmitString(string str, Vector2 position)
-		{
-			for (int i = 0; i < str.Length; i++)
-			{
-				var c = face.GetCharIndex(str[i]);
+		//public void SubmitString(string str, Vector2 position)
+		//{
+		//	for (int i = 0; i < str.Length; i++)
+		//	{
+		//		var c = face.GetCharIndex(str[i]);
 
-				var metrics = GlypList[c].metrics;
+		//		var metrics = GlypList[c].metrics;
 			
-				var xpos = position.X + metrics.HorizontalBearingX.ToSingle();
-				var ypos = position.Y -  metrics.HorizontalBearingY.ToSingle();
+		//		var xpos = position.X + metrics.HorizontalBearingX.ToSingle();
+		//		var ypos = position.Y -  metrics.HorizontalBearingY.ToSingle();
 				
-				var w = metrics.Width.ToSingle();
-				var h = metrics.Height.ToSingle();
+		//		var w = metrics.Width.ToSingle();
+		//		var h = metrics.Height.ToSingle();
 
-				Submit(GlypList[c].texture, new Vector2(xpos , ypos), new Vector2(w , h), SharpDX.Color.White.ToVector4());
+		//		Submit(GlypList[c].texture, new Vector2(xpos , ypos), new Vector2(w , h), SharpDX.Color.White.ToVector4());
 
-				position.X += metrics.HorizontalAdvance.ToInt32();
-			}
+		//		position.X += metrics.HorizontalAdvance.ToInt32();
+		//	}
 
 			
-		}
+		//}
 
 		public void End()
 		{
 			if(sortMode == SortMode.Texture)
 				spriteList.Sort((x, y) => x.textureID.CompareTo(y.textureID));
-
 
 			if (spriteList.Count > 0)
 			{
@@ -190,7 +137,7 @@ namespace LeaFramework.Game.SpriteBatch
 
 		private void CreateRenderBatches()
 		{
-			var vertices = new List<SpriteBatchVertex>();
+			var vertices = new List<FontVertex>();
 			
 			if (spriteList.Count == 0)
 				return;
@@ -198,7 +145,7 @@ namespace LeaFramework.Game.SpriteBatch
 			int offset = 0;
 			renderBatches.Add(new RenderBatch(spriteList[0].srv, 0, 1));
 
-			vertices.Add(new SpriteBatchVertex(spriteList[0].position, spriteList[0].size, spriteList[0].color, spriteList[0].textureID));
+			vertices.Add(new FontVertex(spriteList[0].position, spriteList[0].size, spriteList[0].color, spriteList[0].offset));
 
 			offset++;
 
@@ -209,7 +156,7 @@ namespace LeaFramework.Game.SpriteBatch
 				else
 					renderBatches.Last().numVertices += 1;
 
-				vertices.Add(new SpriteBatchVertex(spriteList[i].position, spriteList[i].size, spriteList[i].color, spriteList[i].textureID));
+				vertices.Add(new FontVertex(spriteList[i].position, spriteList[i].size, spriteList[i].color, spriteList[i].offset));
 
 				offset++;
 			}
@@ -250,7 +197,7 @@ namespace LeaFramework.Game.SpriteBatch
 		{
 			effect.Dispose();
 			sampler.Dispose();
-			vertexBuffer.Dispose();
+		//	vertexBuffer.Dispose();
 		}
 	}
 }

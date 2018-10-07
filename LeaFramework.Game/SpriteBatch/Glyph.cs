@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SharpDX;
 using SharpDX.Direct3D11;
 using SharpFont;
 
@@ -10,18 +11,18 @@ namespace LeaFramework.Game.SpriteBatch
 {
 	public struct Glyph
 	{
-		public ShaderResourceView texture;
 		public int width;
 		public int height;
 		
 		public GlyphMetrics metrics;
+		public Vector2 offset;
 
-		public Glyph(ShaderResourceView texture, int width, int height, GlyphMetrics metrics)
+		public Glyph( int width, int height, GlyphMetrics metrics, Vector2 offset)
 		{
-			this.texture = texture;
 			this.width = width;
 			this.height = height;
 			this.metrics = metrics;
+			this.offset = offset;
 		}
 	}
 }

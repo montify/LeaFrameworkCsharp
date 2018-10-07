@@ -18,6 +18,7 @@ namespace LeaFramework.PlayGround
 		private RenderTarget2D rt;
 		private ShaderResourceView tex, tex1 ;
 		private SpriteBatch spriteBatch;
+		private SpriteFont spriteFont;
 
 		private float x;
 
@@ -38,6 +39,7 @@ namespace LeaFramework.PlayGround
 			triangle = new Triangle(GraphicsDevice);
 
 			spriteBatch = new SpriteBatch(GraphicsDevice);
+			spriteFont = new SpriteFont(GraphicsDevice);
 			ContentManager.Instance.rootDictionary = "Content";
 
 			ContentManager.Instance.LoadTexture(GraphicsDevice, "Content//uvTestTex.png");
@@ -64,6 +66,7 @@ namespace LeaFramework.PlayGround
 			rs.Dispose();
 			triangle.Dispose();
 			spriteBatch.Dispose();
+			spriteFont.Dispose();
 			ContentManager.Instance.Dispose();
 		}
 
@@ -81,15 +84,15 @@ namespace LeaFramework.PlayGround
 			GraphicsDevice.Clear(ClearFlags.RenderTarget | ClearFlags.DepthBuffer, new Color(new Vector3(r,g,b)));
 			GraphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.Rasterizer.State = rs;
 
-			triangle.Render(Color.Red.ToVector3());
 			x += 1;
-
-			spriteBatch.Begin();
-			spriteBatch.Submit(tex, new Vector2(0, 0), new Vector2(32,36), Color.Red.ToVector4());
-		    spriteBatch.Submit(tex, new Vector2(0, 0), new Vector2(200, 200), Color.Green.ToVector4());
-			spriteBatch.SubmitString(x.ToString(), new Vector2(100,100));
-			spriteBatch.SubmitString("aaaaaaaaaaaaaaa", new Vector2(100, 200));
-			spriteBatch.End();
+			var sd = x.ToString();
+			spriteFont.Begin();
+			spriteFont.SubmitString(sd, new Vector2(100, 500));
+			spriteFont.SubmitString("Hallo was geht ab bei dir?", new Vector2(100, 100));
+			spriteFont.SubmitString(" WhiteSpace funktioniert noch nicht so richtig ", new Vector2(100, 200));
+			spriteFont.SubmitString("!#$%&'()*+,-./0123456789:;<=>?@", new Vector2(100, 300));
+			spriteFont.SubmitString("[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~", new Vector2(100, 400));
+			spriteFont.Draw();
 		}
 
 	}

@@ -121,10 +121,19 @@
   <data name="geometryShader" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\SpriteBatch\Shaders\geometryShader.hlsl;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="geometryShaderFont" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\SpriteBatch\FontShaders\geometryShaderFont.hlsl;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="pixelShader" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\SpriteBatch\Shaders\pixelShader.hlsl;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="pixelShaderFont" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\SpriteBatch\FontShaders\pixelShaderFont.hlsl;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="vertexShader" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\SpriteBatch\Shaders\vertexShader.hlsl;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="vertexShaderFont" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\SpriteBatch\FontShaders\vertexShaderFont.hlsl;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

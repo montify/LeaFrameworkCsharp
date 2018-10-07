@@ -81,6 +81,7 @@
     <Compile Include="LeaTexture2D.cs" />
     <Compile Include="TextureBase.cs" />
     <Compile Include="VertexBuffer.cs" />
+    <Compile Include="VertexStructs\FontVertex.cs" />
     <Compile Include="VertexStructs\SpriteBatchVertex.cs" />
     <Compile Include="VertexStructs\VertexPositionColor.cs" />
     <Compile Include="VertexStructs\VertexPositionTextureColor.cs" />
