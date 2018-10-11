@@ -82,12 +82,14 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SpriteBatch\BitmapHelper.cs" />
     <Compile Include="SpriteBatch\Glyph.cs" />
     <Compile Include="SpriteBatch\RenderBatch.cs" />
     <Compile Include="SpriteBatch\SortMode.cs" />
     <Compile Include="SpriteBatch\SpriteBatch.cs" />
     <Compile Include="SpriteBatch\SpriteFont.cs" />
     <Compile Include="SpriteBatch\SpriteInfo.cs" />
+    <Compile Include="SpriteBatch\TexturePacker.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LeaFramework.Content\LeaFramework.Content.csproj">

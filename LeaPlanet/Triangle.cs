@@ -75,8 +75,6 @@ namespace PlayGround
 			var view = Matrix.LookAtLH(new Vector3(0, 0, -5), Vector3.Zero, Vector3.UnitY);
 			
 
-
-
 			viewProj = world * view * proj;
 
 			//	Scale * Rotation * translation

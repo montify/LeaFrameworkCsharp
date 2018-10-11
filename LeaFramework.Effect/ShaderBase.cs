@@ -16,7 +16,7 @@ namespace LeaFramework.Effect
 		internal Dictionary<string, EConstantBuffer> constantBuffers = new Dictionary<string, EConstantBuffer>();
 		internal string debugName;
 		internal ShaderType shaderType;
-		
+		private SamplerState currentSamplerState;
 
 		internal ShaderBytecode GetShaderByteCode(string path, string entryPoint, string profile)
 		{
@@ -104,7 +104,12 @@ namespace LeaFramework.Effect
 
 		public void SetTextureSampler(SamplerState samplerState, int slot)
 		{
-			graphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.PixelShader.SetSampler(slot, samplerState);
+			if (samplerState != currentSamplerState)
+			{
+				graphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.PixelShader.SetSampler(slot, samplerState);
+				currentSamplerState = samplerState;
+			}
+			
 		}
 
 		internal void UpdateConstantBuffers()
@@ -165,6 +170,7 @@ namespace LeaFramework.Effect
 
 			Utilities.Dispose(ref shaderByteCode);
 			Utilities.Dispose(ref shaderReflection);
+			
 
 			CleanUp();
 		}

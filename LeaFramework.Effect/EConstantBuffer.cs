@@ -74,6 +74,18 @@ namespace LeaFramework.Effect
 			}
 		}
 
+		public void SetVariable(string name, int value)
+		{
+			var x = constantBufferVariable[name];
+
+			if (value != backBuffer.Get<int>(x.Offset))
+			{
+				IsDirty = true;
+
+				backBuffer.Set(x.Offset, value);
+			}
+		}
+
 		public void Dispose()
 		{
 			Utilities.Dispose(ref constantBuffer);

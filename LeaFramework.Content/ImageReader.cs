@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Text;
-using System.Threading.Tasks;
-using LeaFramework.Graphics;
+﻿using LeaFramework.Graphics;
 using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.WIC;
 using PixelFormat = SharpDX.WIC.PixelFormat;
+
+using Image = System.Drawing.Image;
 
 namespace LeaFramework.Content
 {
@@ -39,6 +33,8 @@ namespace LeaFramework.Content
 				DecodeOptions.CacheOnDemand
 			);
 			
+
+
 			var frame = d.GetFrame(0);
 			var fconv = new FormatConverter(Imgfactory);
 			fconv.Initialize(frame, PixelFormat.Format32bppPRGBA, BitmapDitherType.None, null, 0.0, BitmapPaletteType.Custom);

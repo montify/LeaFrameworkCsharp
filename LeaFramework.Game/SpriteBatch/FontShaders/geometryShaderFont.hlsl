@@ -1,9 +1,15 @@
-﻿cbuffer perFrame
+﻿cbuffer startUp
+{
+    int textureAtlasResWidthHeight;
+};
+
+cbuffer perFrame
 {
     float4x4 ProjMatrix;
     float scaleSizeX;
     float scaleSizeY;
 };
+
 
 struct GS_IN
 {
@@ -25,7 +31,7 @@ void GSMain(point GS_IN input[1], inout TriangleStream<PS_IN> triStream)
 {
     PS_IN output;
 
-    float2 sizeN = input[0].Size / 512;
+    float2 sizeN = input[0].Size / textureAtlasResWidthHeight;
 
     float2 v1 = float2(input[0].Size.x + scaleSizeX, input[0].Size.y + scaleSizeY) + input[0].Position;
     output.Position = mul(float4(v1, 0, 1), ProjMatrix);

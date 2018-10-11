@@ -82,14 +82,14 @@ namespace LeaFramework.Game.SpriteBatch
 		}
 
 		
-		public void Begin(SortMode sortMode = SortMode.Texture)
+		public void Begin(Matrix scale, SortMode sortMode = SortMode.Texture)
 		{
 			spriteList.Clear();
 			renderBatches.Clear();
 			this.sortMode = sortMode;
 			// Should Calc. MVP here? When yes - when window is maximized the spriteList dont change :(
 			MVP = Matrix.OrthoOffCenterLH(0, graphicsDevice.ViewPort.Width, graphicsDevice.ViewPort.Height, 0, 0, 1);
-			MVP = Matrix.Transpose(MVP);
+			MVP = Matrix.Transpose(scale * MVP);
 		}
 		
 		public void Submit(ShaderResourceView tex, Vector2 position, Vector2 size, Vector4 color)
@@ -98,29 +98,6 @@ namespace LeaFramework.Game.SpriteBatch
 
 			spriteList.Add(tmpSprite);
 		}
-
-
-		//public void SubmitString(string str, Vector2 position)
-		//{
-		//	for (int i = 0; i < str.Length; i++)
-		//	{
-		//		var c = face.GetCharIndex(str[i]);
-
-		//		var metrics = GlypList[c].metrics;
-			
-		//		var xpos = position.X + metrics.HorizontalBearingX.ToSingle();
-		//		var ypos = position.Y -  metrics.HorizontalBearingY.ToSingle();
-				
-		//		var w = metrics.Width.ToSingle();
-		//		var h = metrics.Height.ToSingle();
-
-		//		Submit(GlypList[c].texture, new Vector2(xpos , ypos), new Vector2(w , h), SharpDX.Color.White.ToVector4());
-
-		//		position.X += metrics.HorizontalAdvance.ToInt32();
-		//	}
-
-			
-		//}
 
 		public void End()
 		{

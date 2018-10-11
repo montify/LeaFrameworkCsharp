@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using LeaFramework.Content;
 using LeaFramework.Game;
 using LeaFramework.Game.SpriteBatch;
@@ -7,6 +8,7 @@ using PlayGround;
 using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.Mathematics;
+using Color = SharpDX.Color;
 
 namespace LeaFramework.PlayGround
 {
@@ -25,7 +27,7 @@ namespace LeaFramework.PlayGround
 		public Game01()
 		{
 			WindowTitle = "Framework ALEX 0.01";
-			IsVSyncEnable = false;
+			IsVSyncEnable = true;
 			
 			WindowWidth = 1280;
 			WindowHeight = 720;
@@ -35,12 +37,14 @@ namespace LeaFramework.PlayGround
 
 		public override void Load()
 		{
+			//	Image i = new Bitmap("Content//uvTestTex.png");
+
 
 			triangle = new Triangle(GraphicsDevice);
 
 			spriteBatch = new SpriteBatch(GraphicsDevice);
-			spriteFont = new SpriteFont(GraphicsDevice, "orange.ttf", 50);
-			spriteFont1 = new SpriteFont(GraphicsDevice, "OpenSans-Regular.ttf", 50);
+			spriteFont = new SpriteFont(GraphicsDevice, "orange.ttf", 25);
+			//spriteFont1 = new SpriteFont(GraphicsDevice, "orange.ttf", 25);
 			ContentManager.Instance.rootDictionary = "Content";
 
 			ContentManager.Instance.LoadTexture(GraphicsDevice, "Content//uvTestTex.png");
@@ -58,7 +62,7 @@ namespace LeaFramework.PlayGround
 			rs = new RasterizerState1(GraphicsDevice.NatiDevice1.D3D11Device, desc);
 
 
-		
+
 		}
 
 		public override void Unload()
@@ -73,7 +77,7 @@ namespace LeaFramework.PlayGround
 
 		public override void Update(GameTimer gameTime)
 		{
-			triangle.Update(gameTime, new Vector3(3, 0, 0));
+			//triangle.Update(gameTime, new Vector3(3, 0, 0));
 		}
 
 		public override void Render(GameTimer gameTime)
@@ -82,27 +86,30 @@ namespace LeaFramework.PlayGround
 			float g = 40f / 255;
 			float b = 48f / 255;
 
-			GraphicsDevice.Clear(ClearFlags.RenderTarget | ClearFlags.DepthBuffer, new Color(new Vector3(r,g,b)));
-			GraphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.Rasterizer.State = rs;
+			GraphicsDevice.Clear(ClearFlags.RenderTarget | ClearFlags.DepthBuffer, new Color(new Vector3(r, g, b)));
 
-			x += 1;
-			var sd = x.ToString();
+			GraphicsDevice.SetRasterizerState(rs);
 
+			x += 0.1f;
 			
-			spriteFont.Begin();
-			spriteFont.SubmitString("LeaFramework v00000 xD", new Vector2(100, 100));
-			spriteFont.SubmitString("[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~", new Vector2(100, 500));
-		//	spriteFont.SubmitString(sd, new Vector2(100, 600));
+
+			float screenscaleW = (float)GraphicsDevice.ViewPort.Width / 1280;
+			float screenscaleH = (float)GraphicsDevice.ViewPort.Height / 720;
+			var scale = Matrix.Scaling(screenscaleW, screenscaleH, 1);
+
+
+
+			spriteFont.Begin(scale);
+			spriteFont.SubmitString(x.ToString("##.###"), new Vector2(90, 90));
+			spriteFont.SubmitString("GgHh", new Vector2(90, 150));
+			spriteFont.SubmitString("How the raid is going?   {|}", new Vector2(90, 200));
+			//spriteFont.SubmitString("How the raid is going?9987&%721", new Vector2(90, 200));
+		//	spriteFont.SubmitString("SCAV BOSS IS SO aweSome Thats ghurt asuda sdasda 646", new Vector2(90, 250));
 			spriteFont.Draw();
 
-			spriteFont1.Begin();
-			spriteFont1.SubmitString(":D Different TrueType Fonts supportet", new Vector2(100, 200));
-			spriteFont1.SubmitString("GaH:;<=>?@ {a}", new Vector2(100, 300));
-			spriteFont1.SubmitString(":D Different TrueType Fonts supportet", new Vector2(100, 400));
-			//spriteFont1.SubmitString(sd, new Vector2(100, 650));
-			spriteFont1.Draw();
-
-
+			spriteBatch.Begin(Matrix.Identity);
+			spriteBatch.Submit(tex1, new Vector2(0, 0), new Vector2(GraphicsDevice.ViewPort.Width, 60), Color.White.ToVector4());
+			spriteBatch.End();
 
 
 		}

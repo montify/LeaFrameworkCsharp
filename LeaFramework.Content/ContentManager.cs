@@ -9,6 +9,7 @@ using LeaFramework.Graphics;
 using SharpDX;
 using SharpDX.Direct3D11;
 using Texture2D = SharpDX.Direct3D11.Texture2D;
+
 namespace LeaFramework.Content
 {
 	public sealed class ContentManager : IDisposable
@@ -30,6 +31,8 @@ namespace LeaFramework.Content
 
 			var tex = TextureLoader.GetSRV(graphicsDevice.NatiDevice1.D3D11Device, path);
 
+
+		
 
 			textureList.Add(textureName, tex);
 		}

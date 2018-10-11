@@ -23,26 +23,21 @@ namespace LeaFramework.Graphics
 #if DEBUG
 			base.debugName = debugName;
 #endif
-
 		}
-
 
 		public void CreateAndSetData<T>(T[] vertices) where T : struct
 		{
-	
 			if (buffer == null)
 			{
 				if (!isDynamic)
 				{
 					buffer = Buffer.Create(graphicsDevice.NatiDevice1.D3D11Device, BindFlags.VertexBuffer, vertices);
-
 				}
 				else
 				{
 					buffer = Buffer.Create(graphicsDevice.NatiDevice1.D3D11Device, BindFlags.VertexBuffer, vertices,
 						Utilities.SizeOf(vertices) , ResourceUsage.Dynamic,
 						CpuAccessFlags.Write);
-				
 				}
 
 				buffer.DebugName = debugName;

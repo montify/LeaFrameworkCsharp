@@ -106,6 +106,23 @@ namespace LeaFramework.Effect
 					throw new Exception("ShaderStage not supporter yet");
 			}
 		}
+		public void SetVariable(string name, string constanBuffer, int value, ShaderType shaderType)
+		{
+			switch (shaderType)
+			{
+				case ShaderType.VertexShader:
+					GetVertexShader().GetConstantBuffer(constanBuffer).SetVariable(name, value);
+					break;
+				case ShaderType.PixelShader:
+					GetPixelShader().GetConstantBuffer(constanBuffer).SetVariable(name, value);
+					break;
+				case ShaderType.GeometryShader:
+					GetGeometryShader().GetConstantBuffer(constanBuffer).SetVariable(name, value);
+					break;
+				default:
+					throw new Exception("ShaderStage not supporter yet");
+			}
+		}
 		public void SetSampler(LeaSamplerState sampler, int slot, ShaderType shaderType)
 		{
 			switch (shaderType)

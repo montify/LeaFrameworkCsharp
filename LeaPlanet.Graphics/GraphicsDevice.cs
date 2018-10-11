@@ -28,6 +28,8 @@ namespace LeaFramework.Graphics
 		private GeometryShader currentGeometryShader;
 		private PixelShader currentPixelShader;
 		private Viewport currentViewport;
+		private BlendState currentBlendState;
+		private RasterizerState currentRsState;
 
 		public GraphicsDevice(RenderForm renderForm)
 		{
@@ -221,9 +223,23 @@ namespace LeaFramework.Graphics
 
 		public void SetblendState(BlendState blendState)
 		{
-			nativeDevice.D3D11Device.ImmediateContext1.OutputMerger.SetBlendState(blendState);
+			if (blendState != currentBlendState)
+			{
+				nativeDevice.D3D11Device.ImmediateContext1.OutputMerger.SetBlendState(blendState);
+				currentBlendState = blendState;
+			}
+			
 		}
 
+		public void SetRasterizerState(RasterizerState rs)
+		{
+			if (rs != currentRsState)
+			{
+				nativeDevice.D3D11Device.ImmediateContext1.Rasterizer.State = rs;
+				currentRsState = rs;
+			}
+		}
+	
 		public void Present(bool isVSyncEbable)
 		{
 			IsShaderSwitchHappen = false;
