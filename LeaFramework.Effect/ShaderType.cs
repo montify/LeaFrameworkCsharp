@@ -1,4 +1,9 @@
 ﻿namespace LeaFramework.Effect
 {
-	public enum ShaderType { VertexShader, PixelShader, GeometryShader }
+	public enum ShaderType
+	{
+		VertexShader,
+		PixelShader,
+		GeometryShader
+	}
 }

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using LeaFramework.Graphics;
 using SharpDX;
-using SharpDX.Direct3D11;
-using Buffer = SharpDX.Direct3D11.Buffer;
 
 namespace LeaFramework.Effect
 {
@@ -13,8 +11,8 @@ namespace LeaFramework.Effect
 		internal string Name;
 		internal int Size;
 		internal DataBuffer backBuffer;
-		internal Buffer constantBuffer;
-		internal Dictionary<string, ConstantBufferVariable> constantBufferVariable = new Dictionary<string, ConstantBufferVariable>();
+		internal ConstantBuffer constantBuffer;
+		internal Dictionary<string, ConstantBufferVariable> constantBufferVariables = new Dictionary<string, ConstantBufferVariable>();
 		
 		internal bool IsDirty;
 
@@ -29,19 +27,21 @@ namespace LeaFramework.Effect
 		{
 			Size += variable.Size;
 
-			constantBufferVariable.Add(name, variable);
+			constantBufferVariables.Add(name, variable);
 		}
 
-		internal void CreateMemoryAndConstantBuffer()
+		internal void CreateBuffers()
 		{
+			constantBuffer = new ConstantBuffer(graphicsDevice);
+			constantBuffer.Create(Size);
+
 			backBuffer = new DataBuffer(Size);
 			Utilities.ClearMemory(backBuffer.DataPointer, 0x0, Size);
-			constantBuffer = new Buffer(graphicsDevice.NatiDevice1.D3D11Device, Size, ResourceUsage.Dynamic, BindFlags.ConstantBuffer, CpuAccessFlags.Write, ResourceOptionFlags.None, 0);
 		}
 
 		public void SetVariable(string name, Vector3 value)
 		{
-			var x = constantBufferVariable[name];
+			var x = constantBufferVariables[name];
 
 			if (value != backBuffer.Get<Vector3>(x.Offset))
 			{
@@ -53,7 +53,7 @@ namespace LeaFramework.Effect
 
 		public void SetVariable(string name, Matrix value)
 		{
-			var x = constantBufferVariable[name];
+			var x = constantBufferVariables[name];
 
 			if (value != backBuffer.Get<Matrix>(x.Offset))
 			{
@@ -64,7 +64,7 @@ namespace LeaFramework.Effect
 
 		public void SetVariable(string name, float value)
 		{
-			var x = constantBufferVariable[name];
+			var x = constantBufferVariables[name];
 
 			if (value != backBuffer.Get<float>(x.Offset))
 			{
@@ -76,7 +76,7 @@ namespace LeaFramework.Effect
 
 		public void SetVariable(string name, int value)
 		{
-			var x = constantBufferVariable[name];
+			var x = constantBufferVariables[name];
 
 			if (value != backBuffer.Get<int>(x.Offset))
 			{
@@ -88,8 +88,9 @@ namespace LeaFramework.Effect
 
 		public void Dispose()
 		{
-			Utilities.Dispose(ref constantBuffer);
+			//Utilities.Dispose(ref constantBuffer);
 			Utilities.Dispose(ref backBuffer);
+			constantBuffer.Dispose();
 		}
 	}
 }

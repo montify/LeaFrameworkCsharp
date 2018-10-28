@@ -133,6 +133,7 @@ namespace LeaFramework.Graphics
 
 		public void SetVertexBuffer(VertexBuffer vertexBuffer)
 		{
+
 			if (vertexBuffer == currentVertexBuffer)
 				return;
 
@@ -146,7 +147,7 @@ namespace LeaFramework.Graphics
 				return;
 
 			currentIndexBuffer = indexBuffer;
-			nativeDevice.D3D11Device.ImmediateContext1.InputAssembler.SetIndexBuffer(indexBuffer.Buffer, indexBuffer.Format, offset);
+			nativeDevice.D3D11Device.ImmediateContext1.InputAssembler.SetIndexBuffer(indexBuffer.NativeBuffer, indexBuffer.Format, offset);
 		}
 		
 		public void SetInputLayout(InputLayout inputLayout)
@@ -203,23 +204,23 @@ namespace LeaFramework.Graphics
 			nativeDevice.D3D11Device.ImmediateContext1.PixelShader.Set(pixelShader);
 		}
 
-		public void SetRenderTarget(RenderTarget2D renderTarget)
-		{
-			var renderTargetViewPort = new Viewport(0, 0, renderTarget.Width, renderTarget.Height);
+		//public void SetRenderTarget(RenderTarget2D renderTarget)
+		//{
+		//	var renderTargetViewPort = new Viewport(0, 0, renderTarget.Width, renderTarget.Height);
 			
-			SetViewPort(renderTargetViewPort);
+		//	SetViewPort(renderTargetViewPort);
 
-			nativeDevice.D3D11Device.ImmediateContext1.OutputMerger.SetRenderTargets(renderTarget.RenderTargetTextureView);
-			nativeDevice.D3D11Device.ImmediateContext1.ClearRenderTargetView(renderTarget.RenderTargetTextureView, Color.Violet);
-		}
+		//	nativeDevice.D3D11Device.ImmediateContext1.OutputMerger.SetRenderTargets(renderTarget.RenderTargetTextureView);
+		//	nativeDevice.D3D11Device.ImmediateContext1.ClearRenderTargetView(renderTarget.RenderTargetTextureView, Color.Violet);
+		//}
 
-		public void RestoreRenderTarget()
-		{
-			ResetTargets();
-			nativeDevice.D3D11Device.ImmediateContext1.OutputMerger.SetRenderTargets(renderTargetView);
+		//public void RestoreRenderTarget()
+		//{
+		//	ResetTargets();
+		//	nativeDevice.D3D11Device.ImmediateContext1.OutputMerger.SetRenderTargets(renderTargetView);
 			
-			SetViewPort(ViewPort);
-		}
+		//	SetViewPort(ViewPort);
+		//}
 
 		public void SetblendState(BlendState blendState)
 		{

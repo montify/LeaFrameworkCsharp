@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using LeaFramework.Graphics;
 using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D11;
+
 
 namespace LeaFramework.Effect
 {
@@ -17,12 +17,13 @@ namespace LeaFramework.Effect
 		internal string debugName;
 		internal ShaderType shaderType;
 		private SamplerState currentSamplerState;
+		private int currentShaderResourceView;
 
 		internal ShaderBytecode GetShaderByteCode(string path, string entryPoint, string profile)
 		{
 			ShaderFlags flags = ShaderFlags.None;
 #if DEBUG
-			 flags = ShaderFlags.Debug | ShaderFlags.SkipOptimization;
+			flags = ShaderFlags.Debug | ShaderFlags.SkipOptimization;
 #endif
 			
 			return ShaderBytecode.CompileFromFile(path, entryPoint, profile, flags);
@@ -48,14 +49,14 @@ namespace LeaFramework.Effect
 			// MARK BUFFER IS DIRTY, SO ONLY CHANGED BUFFERS/VARIABLE GET UPDATED
 			var numberOfConstantBuffers = shaderReflection.Description.ConstantBuffers;
 
-			var resList = new Dictionary<string, EConstantBuffer>();
+			var eConstantBuffersList = new Dictionary<string, EConstantBuffer>();
 
 			for (int i = 0; i < numberOfConstantBuffers; i++)
 			{
 				var constantBuffer = shaderReflection.GetConstantBuffer(i);
 				
 				EConstantBuffer c = new EConstantBuffer(constantBuffer.Description.Name, graphicsDevice);
-
+				
 				for (int x = 0; x < constantBuffer.Description.VariableCount; x++)
 				{
 					var name = constantBuffer.GetVariable(x).Description.Name;
@@ -65,15 +66,15 @@ namespace LeaFramework.Effect
 					c.AddConstantBufferVariable(name, new ConstantBufferVariable(name, size, offset));
 				}
 
-				resList.Add(constantBuffer.Description.Name, c);
+				eConstantBuffersList.Add(constantBuffer.Description.Name, c);
 			}
 
-			foreach (var cbuffers in resList)
+			foreach (var cbuffers in eConstantBuffersList)
 			{
-				cbuffers.Value.CreateMemoryAndConstantBuffer();
+				cbuffers.Value.CreateBuffers();
 			}
 
-			return resList;
+			return eConstantBuffersList;
 		}
 
 
@@ -85,21 +86,22 @@ namespace LeaFramework.Effect
 
 		public void SetTexture(ShaderResourceView srv, int slot, ShaderType shaderType)
 		{
-			switch (shaderType)
-			{
-				case ShaderType.VertexShader:
-					graphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.VertexShader.SetShaderResource(slot, srv);
-					break;
-				case ShaderType.PixelShader:
-					graphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.PixelShader.SetShaderResource(slot, srv);
-					break;
-				case ShaderType.GeometryShader:
-					graphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.GeometryShader.SetShaderResource(slot, srv);
-					break;
-				default:
-					throw new Exception("ShaderStage not supporter yet");
-			}
+				switch (shaderType)
+				{
+					case ShaderType.VertexShader:
+						graphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.VertexShader.SetShaderResource(slot, srv);
+						break;
+					case ShaderType.PixelShader:
+						graphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.PixelShader.SetShaderResource(slot, srv);
+						break;
+					case ShaderType.GeometryShader:
+						graphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.GeometryShader.SetShaderResource(slot, srv);
+						break;
+					default:
+						throw new Exception("ShaderStage not supporter yet");
+				}
 
+				currentShaderResourceView = srv.GetHashCode();
 		}
 
 		public void SetTextureSampler(SamplerState samplerState, int slot)
@@ -118,13 +120,7 @@ namespace LeaFramework.Effect
 			{
 				if (constantBuffer.Value.IsDirty)
 				{
-					var mappedConstantBuffer = graphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.MapSubresource(constantBuffer.Value.constantBuffer, 0, MapMode.WriteDiscard, MapFlags.None);
-
-					// Copy Memory from BackBuffer to the mappedConstantBuffer
-					Utilities.CopyMemory(mappedConstantBuffer.DataPointer, constantBuffer.Value.backBuffer.DataPointer, constantBuffer.Value.Size);
-
-					graphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.UnmapSubresource(constantBuffer.Value.constantBuffer, 0);
-
+					constantBuffer.Value.constantBuffer.UpdateBuffer(constantBuffer.Value.backBuffer.DataPointer);
 				}				
 			}
 		}
@@ -141,15 +137,15 @@ namespace LeaFramework.Effect
 				if (constantBuffer.Value.IsDirty || graphicsDevice.IsShaderSwitchHappen)
 				{
 					if (shaderType == ShaderType.VertexShader)
-						graphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.VertexShader.SetConstantBuffer(shaderSlot, constantBuffer.Value.constantBuffer);
+						graphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.VertexShader.SetConstantBuffer(shaderSlot, constantBuffer.Value.constantBuffer.NativeBuffer);
 
 
 					if (shaderType == ShaderType.PixelShader)
-						graphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.PixelShader.SetConstantBuffer(shaderSlot, constantBuffer.Value.constantBuffer);
+						graphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.PixelShader.SetConstantBuffer(shaderSlot, constantBuffer.Value.constantBuffer.NativeBuffer);
 
 
 					if (shaderType == ShaderType.GeometryShader)
-						graphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.GeometryShader.SetConstantBuffer(shaderSlot, constantBuffer.Value.constantBuffer);
+						graphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.GeometryShader.SetConstantBuffer(shaderSlot, constantBuffer.Value.constantBuffer.NativeBuffer);
 				}
 
 				constantBuffer.Value.IsDirty = false;

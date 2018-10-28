@@ -72,6 +72,7 @@ namespace LeaFramework.Effect
 					throw new Exception("ShaderStage not supporter yet");
 			}
 		}
+
 		public void SetVariable(string name,  string constanBuffer, Vector3 value,  ShaderType shaderType)
 		{
 			switch (shaderType)
@@ -89,6 +90,7 @@ namespace LeaFramework.Effect
 					throw new Exception("ShaderStage not supporter yet");
 			}
 		}
+
 		public void SetVariable(string name, string constanBuffer, float value, ShaderType shaderType)
 		{
 			switch (shaderType)
@@ -106,6 +108,7 @@ namespace LeaFramework.Effect
 					throw new Exception("ShaderStage not supporter yet");
 			}
 		}
+
 		public void SetVariable(string name, string constanBuffer, int value, ShaderType shaderType)
 		{
 			switch (shaderType)
@@ -123,6 +126,7 @@ namespace LeaFramework.Effect
 					throw new Exception("ShaderStage not supporter yet");
 			}
 		}
+
 		public void SetSampler(LeaSamplerState sampler, int slot, ShaderType shaderType)
 		{
 			switch (shaderType)
@@ -133,8 +137,11 @@ namespace LeaFramework.Effect
 				case ShaderType.PixelShader:
 					GetPixelShader().SetTextureSampler(sampler.NativeSampler, slot);
 					break;
+				default:
+					throw new Exception("ShaderStage not supporter yet");
 			}
 		}
+
 		public void SetTexture(ShaderResourceView texture, int slot, ShaderType shaderType)
 		{
 			switch (shaderType)
@@ -153,8 +160,10 @@ namespace LeaFramework.Effect
 			}
 		}
 
+
 		public void Apply()
 		{
+			
 			ResetShaders();
 			SetShaders();
 			UpdateAndSetConstantBuffers();
@@ -211,7 +220,6 @@ namespace LeaFramework.Effect
 				}
 			}
 		}
-
 
 		public void Dispose()
 		{

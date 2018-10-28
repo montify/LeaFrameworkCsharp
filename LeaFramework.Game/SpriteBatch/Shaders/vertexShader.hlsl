@@ -8,7 +8,7 @@
 
 struct GS_IN
 {
-    float2 Position : POSITION;
+    float2 Position : POSITION0;
     float2 Size : TEXCOORD;
     float4 Color : COLOR;
     int TextureID : BLENDINDICES;

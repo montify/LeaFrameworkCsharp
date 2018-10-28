@@ -13,5 +13,5 @@ float4 PSMain(PS_IN input) : SV_Target
 {
     float4 t = tex.Sample(samp, input.UVCoordinate);
     
-    return t;
+    return t * input.Color;
 }

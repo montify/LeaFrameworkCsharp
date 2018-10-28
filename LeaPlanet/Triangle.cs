@@ -5,11 +5,12 @@ using LeaFramework.Graphics;
 using LeaFramework.Graphics.VertexStructs;
 using SharpDX;
 using SharpDX.Direct3D;
+using SharpDX.DXGI;
 
 namespace PlayGround
 {
 	public class Triangle : IDisposable
-	{	
+	{
 		VertexBuffer vertexBuffer;
 		IndexBuffer indexBuffer;
 		GraphicsDevice graphicsDevice;
@@ -58,12 +59,15 @@ namespace PlayGround
 			{
 				0, 1, 2
 			};
-			
-			vertexBuffer = new VertexBuffer(graphicsDevice, false);
-			vertexBuffer.CreateAndSetData(vertices);
+		
+			vertexBuffer = new VertexBuffer(graphicsDevice, BufferType.Normal);
+			vertexBuffer.SetData(vertices);
 
-			indexBuffer = new IndexBuffer(graphicsDevice, IndexBufferFormat.DXGI_FORMAT_R32_UINT, "XDTT");
+
+			indexBuffer = new IndexBuffer(graphicsDevice, Format.R32_UInt, "XDTT");
 			indexBuffer.SetData(indices);
+
+			
 		}
 
 		public void Update(GameTimer gameTime, Vector3 position)

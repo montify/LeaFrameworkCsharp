@@ -33,6 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -107,6 +108,10 @@
     <ProjectReference Include="..\LeaFramework.Game\LeaFramework.Game.csproj">
       <Project>{81acedfb-711c-4081-8d85-ba77553c2bae}</Project>
       <Name>LeaFramework.Game</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LeaFramework.Input\LeaFramework.Input.csproj">
+      <Project>{279e7364-7905-4272-af3e-a151de065557}</Project>
+      <Name>LeaFramework.Input</Name>
     </ProjectReference>
     <ProjectReference Include="..\LeaPlanet.Graphics\LeaFramework.Graphics.csproj">
       <Project>{41cfe03b-b08a-43ae-af7b-4f2f5414628a}</Project>

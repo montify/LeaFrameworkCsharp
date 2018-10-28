@@ -1,13 +1,13 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Threading.Tasks;
 using LeaFramework.Content;
 using LeaFramework.Game;
 using LeaFramework.Game.SpriteBatch;
 using LeaFramework.Graphics;
+using LeaFramework.Input;
 using PlayGround;
 using SharpDX;
 using SharpDX.Direct3D11;
-using SharpDX.Mathematics;
+
 using Color = SharpDX.Color;
 
 namespace LeaFramework.PlayGround
@@ -17,12 +17,18 @@ namespace LeaFramework.PlayGround
 		private Triangle triangle;
 
 		private RasterizerState1 rs, rs1;
-		private RenderTarget2D rt;
+		//private RenderTarget2D rt;
 		private ShaderResourceView tex, tex1 ;
 		private SpriteBatch spriteBatch;
-		private SpriteFont spriteFont, spriteFont1;
+		private SpriteFontRenderer spriteFont, spriteFont1;
+		LeaTexture2D texture;
+		int track;
+		private float x, y = 10;
+		float xPos;
+		string text ;
 
-		private float x;
+		private bool dirRight = true;
+		public float speed = 2.0f;
 
 		public Game01()
 		{
@@ -37,22 +43,23 @@ namespace LeaFramework.PlayGround
 
 		public override void Load()
 		{
-			//	Image i = new Bitmap("Content//uvTestTex.png");
-
 
 			triangle = new Triangle(GraphicsDevice);
-
+			
 			spriteBatch = new SpriteBatch(GraphicsDevice);
-			spriteFont = new SpriteFont(GraphicsDevice, "orange.ttf", 25);
-			//spriteFont1 = new SpriteFont(GraphicsDevice, "orange.ttf", 25);
-			ContentManager.Instance.rootDictionary = "Content";
+			spriteFont = new SpriteFontRenderer(GraphicsDevice, "OpenSans-Regular.ttf", 25);
+		
+			
+			
 
-			ContentManager.Instance.LoadTexture(GraphicsDevice, "Content//uvTestTex.png");
-			ContentManager.Instance.LoadTexture(GraphicsDevice, "Content//tt.png");
+			texture = ContentManager.Instance.Load<LeaTexture2D>(GraphicsDevice, "Content//tt.png");
+			
 
-			tex = ContentManager.Instance.GetTexture("uvTestTex.png");
-			tex1 = ContentManager.Instance.GetTexture("tt.png");
-
+			Task.Factory.StartNew(() =>
+			{
+				InputManager.Instance.Listen(RenderForm);
+			});
+			
 			var desc = new RasterizerStateDescription1
 			{
 				CullMode = CullMode.None,
@@ -69,47 +76,74 @@ namespace LeaFramework.PlayGround
 		{
 
 			rs.Dispose();
-			triangle.Dispose();
-			spriteBatch.Dispose();
+		//	triangle.Dispose();
+		//	spriteBatch.Dispose();
 			spriteFont.Dispose();
 			ContentManager.Instance.Dispose();
 		}
-
+		
 		public override void Update(GameTimer gameTime)
 		{
-			//triangle.Update(gameTime, new Vector3(3, 0, 0));
+			triangle.Update(gameTime, new Vector3(3, 0, 0));
 		}
 
 		public override void Render(GameTimer gameTime)
 		{
-			float r = 15f / 255;
-			float g = 40f / 255;
-			float b = 48f / 255;
-
-			GraphicsDevice.Clear(ClearFlags.RenderTarget | ClearFlags.DepthBuffer, new Color(new Vector3(r, g, b)));
+			GraphicsDevice.Clear(ClearFlags.RenderTarget | ClearFlags.DepthBuffer, Color.CornflowerBlue);
 
 			GraphicsDevice.SetRasterizerState(rs);
 
-			x += 0.1f;
-			
-
+	
 			float screenscaleW = (float)GraphicsDevice.ViewPort.Width / 1280;
 			float screenscaleH = (float)GraphicsDevice.ViewPort.Height / 720;
 			var scale = Matrix.Scaling(screenscaleW, screenscaleH, 1);
 
+			if (InputManager.Instance.IsKeyDown(Key.ESC)) IsRunning = false;
+
+			if (InputManager.Instance.IsKeyDown(Key.W))
+				y -= 300 * gameTime.DeltaTime;
+
+			if (InputManager.Instance.IsKeyDown(Key.S))
+				y += 300 * gameTime.DeltaTime;
+
+			if (InputManager.Instance.IsKeyDown(Key.A))
+				x -= 300 * gameTime.DeltaTime;
+			if (InputManager.Instance.IsKeyDown(Key.D))
+				x += 300 * gameTime.DeltaTime;
+
+
+			RectangleF player = new RectangleF(x, y, 100, 100);
+			RectangleF st = new RectangleF(xPos, 300, 100, 100);
+
+
+			if (dirRight)
+				xPos += 400 * gameTime.DeltaTime;
+			else
+				xPos -= 400 * gameTime.DeltaTime;
+
+
+			if (xPos >= GraphicsDevice.ViewPort.Width-100)
+			{
+				dirRight = false;
+			}
+			if (xPos <= 0)
+			{
+				dirRight = true;
+			}
+
+
+			spriteBatch.Begin(Matrix.Identity);
+			spriteBatch.Submit(texture, new Vector2(x, y), Vector2.Zero, Color.White.ToVector4());
+			spriteBatch.Submit(texture, new Vector2(xPos, 300), Vector2.Zero, Color.White.ToVector4());
+			spriteBatch.End();
 
 
 			spriteFont.Begin(scale);
-			spriteFont.SubmitString(x.ToString("##.###"), new Vector2(90, 90));
-			spriteFont.SubmitString("GgHh", new Vector2(90, 150));
-			spriteFont.SubmitString("How the raid is going?   {|}", new Vector2(90, 200));
-			//spriteFont.SubmitString("How the raid is going?9987&%721", new Vector2(90, 200));
-		//	spriteFont.SubmitString("SCAV BOSS IS SO aweSome Thats ghurt asuda sdasda 646", new Vector2(90, 250));
+			if (st.Intersects(player))
+				spriteFont.SubmitString("INTERSTECT ", new Vector2(0, 100), Color.Red);
+			
 			spriteFont.Draw();
 
-			spriteBatch.Begin(Matrix.Identity);
-			spriteBatch.Submit(tex1, new Vector2(0, 0), new Vector2(GraphicsDevice.ViewPort.Width, 60), Color.White.ToVector4());
-			spriteBatch.End();
 
 
 		}

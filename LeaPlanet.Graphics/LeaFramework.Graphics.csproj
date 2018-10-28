@@ -69,8 +69,8 @@
   <ItemGroup>
     <Compile Include="BackBuffer.cs" />
     <Compile Include="BufferBase.cs" />
+    <Compile Include="ConstantBuffer.cs" />
     <Compile Include="DepthBuffer.cs" />
-    <Compile Include="IndexBufferFormat.cs" />
     <Compile Include="LeaSamplerState.cs" />
     <Compile Include="NativeDevice.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -81,12 +81,12 @@
     <Compile Include="LeaTexture2D.cs" />
     <Compile Include="TextureBase.cs" />
     <Compile Include="VertexBuffer.cs" />
+    <Compile Include="BufferType.cs" />
     <Compile Include="VertexStructs\FontVertex.cs" />
     <Compile Include="VertexStructs\SpriteBatchVertex.cs" />
     <Compile Include="VertexStructs\VertexPositionColor.cs" />
     <Compile Include="VertexStructs\VertexPositionTextureColor.cs" />
     <Compile Include="VertexStructs\VertexPostitionColorTextureNormal.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,7 +1,7 @@
 ﻿namespace LeaFramework.Effect
 {
 
-	public class ConstantBufferVariable
+	public struct ConstantBufferVariable
 	{
 		public string Name;
 		public int Size;
@@ -10,9 +10,10 @@
 
 		public ConstantBufferVariable(string name, int size, int offset)
 		{
-			this.Name = name;
-			this.Offset = offset;
+			Name = name;
+			Offset = offset;
 
+			Size = 0;
 			Size = CalculateAlignement(size, 16);
 		
 		}

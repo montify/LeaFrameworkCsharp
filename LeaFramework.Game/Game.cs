@@ -8,6 +8,8 @@ namespace LeaPlanet.src
 {
 	public abstract class Game : IDisposable
 	{
+		public RenderForm RenderForm => renderForm;
+
 		private RenderForm renderForm;
 		private GraphicsDevice graphicsDevice;
 		private bool isResize;
@@ -23,9 +25,13 @@ namespace LeaPlanet.src
 		public int WindowHeight { get; set; }
 		public bool IsVSyncEnable;
 
+		public float CurrentFps { get; private set; }
+
+		public bool IsRunning { get; set; }
+
 		protected Game()
 		{
-
+			IsRunning = true;
 			
 		}
 
@@ -40,10 +46,10 @@ namespace LeaPlanet.src
 				Height = WindowHeight				
 			};
 
-			graphicsDevice = new GraphicsDevice(renderForm);
+			graphicsDevice = new GraphicsDevice(RenderForm);
 
-			renderForm.UserResized += (sender, args) => isResize = true;
-
+			RenderForm.UserResized += (sender, args) => isResize = true;
+			
 		}
 
 		private void CalculateFrameRate()
@@ -54,11 +60,11 @@ namespace LeaPlanet.src
 			if (!(timer.TotalTime - timeElapsed >= 1.0f))
 				return;
 
-			var fps = (float)frameCount;
-			var mspf = 1000.0f / fps;
-			var s = WindowTitle + $" | FPS: {fps} Frame Time: {mspf} (ms)";
+			 CurrentFps = (float)frameCount;
+			var mspf = 1000.0f / CurrentFps;
+			var s = WindowTitle + $" | FPS: {CurrentFps} Frame Time: {mspf} (ms)";
 
-			renderForm.Text = s;
+			RenderForm.Text = s;
 
 			frameCount = 0;
 			timeElapsed += 1.0f;
@@ -69,13 +75,14 @@ namespace LeaPlanet.src
 			timer.Reset();
 			Load();
 
-			RenderLoop.Run(renderForm, () => 
+			
+			RenderLoop.Run(RenderForm, () => 
 			{
 				CalculateFrameRate();
 
 				if (isResize)
 				{
-					graphicsDevice.Resize(renderForm.ClientSize.Width, renderForm.ClientSize.Height);
+					graphicsDevice.Resize(RenderForm.ClientSize.Width, RenderForm.ClientSize.Height);
 					isResize = false;
 				}
 
@@ -84,7 +91,10 @@ namespace LeaPlanet.src
 
 				
 				graphicsDevice.Present(IsVSyncEnable);
-				
+
+				if (!IsRunning)
+					renderForm.Close();
+					
 			});
 
 			Unload();

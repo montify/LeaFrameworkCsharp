@@ -9,7 +9,7 @@ namespace LeaFramework.Game.SpriteBatch
 		public Vector2 size;
 		public Vector4 color;
 		public ShaderResourceView srv;
-		public int textureID;
 		public Vector2 offset;
+		public int textureID;
 	}
 }

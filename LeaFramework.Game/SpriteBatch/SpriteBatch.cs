@@ -62,7 +62,10 @@ namespace LeaFramework.Game.SpriteBatch
 
 			effect = new LeaEffect(graphicsDevice, createInfo);
 
-		//	CreateGlyphs();
+			vertexBuffer = new VertexBuffer(graphicsDevice, BufferType.Dynamic);
+
+			FontVertex[] v = new FontVertex[1024];
+			vertexBuffer.SetData(v);
 
 			var desc = new BlendStateDescription();
 			desc.RenderTarget[0].IsBlendEnabled = true;
@@ -92,9 +95,9 @@ namespace LeaFramework.Game.SpriteBatch
 			MVP = Matrix.Transpose(scale * MVP);
 		}
 		
-		public void Submit(ShaderResourceView tex, Vector2 position, Vector2 size, Vector4 color)
+		public void Submit(LeaTexture2D tex, Vector2 position, Vector2 size, Vector4 color)
 		{
-			var tmpSprite = new SpriteInfo {position = position, size = size, color = color, srv = tex, textureID = tex.GetHashCode()};
+			var tmpSprite = new SpriteInfo {position = position, size = new Vector2(tex.Width, tex.Height), color = color, srv = tex.ShaderResourceView, textureID = tex.GetHashCode()};
 
 			spriteList.Add(tmpSprite);
 		}
@@ -138,12 +141,6 @@ namespace LeaFramework.Game.SpriteBatch
 				offset++;
 			}
 
-			if (vertexBuffer == null)
-			{
-				vertexBuffer = new VertexBuffer(graphicsDevice, true);
-				vertexBuffer.CreateAndSetData(vertices.ToArray());
-			}
-			
 			vertexBuffer.UpdateBuffer(vertices.ToArray(), 0);
 
 			vertices.Clear();

@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
+using LeaFramework.Effect;
 using LeaFramework.Graphics;
 using SharpDX;
 using SharpDX.Direct3D11;
@@ -14,36 +15,51 @@ namespace LeaFramework.Content
 {
 	public sealed class ContentManager : IDisposable
 	{
-		private static  ContentManager instance;
-		
-		public string rootDictionary { get; set; }
-
-		private Dictionary<string, ShaderResourceView> textureList = new Dictionary<string, ShaderResourceView>();
+		private static ContentManager instance;
+		public string RootDictionary { get; set; }
+	
+		private readonly Dictionary<int, object> resourceList = new Dictionary<int, object>();
+		private readonly Dictionary<Type, IContentLoader> contentLoaderList = new Dictionary<Type, IContentLoader>();
 
 		private ContentManager()
 		{
-		//	var b = ImageReader.LoadImageFromFile("Content/test.png");
+			contentLoaderList.Add(typeof(LeaTexture2D), new BitMapLoader());
 		}
-
-		public void LoadTexture(GraphicsDevice graphicsDevice, string path)
-		{
-			string textureName = Path.GetFileName(path);
-
-			var tex = TextureLoader.GetSRV(graphicsDevice.NatiDevice1.D3D11Device, path);
-
-
 		
-
-			textureList.Add(textureName, tex);
-		}
-
-		public ShaderResourceView GetTexture(string name)
+		public T Load<T>(GraphicsDevice graphicsDevice, string path)
 		{
-			return textureList[name];
+			int uniqueKey = path.GetHashCode() + typeof(T).GetHashCode();
+
+			IContentLoader contentReader;
+
+			if (resourceList.ContainsKey(uniqueKey))
+			{
+				return (T)resourceList[uniqueKey];
+			}
+			else
+			{
+				if (typeof(T) == typeof(LeaTexture2D))
+				{
+					contentReader = new BitMapLoader();
+					var image = contentReader.Load(path) as Image;
+
+					var tex = LeaTexture2D.Create(graphicsDevice, image);
+
+					resourceList.Add(uniqueKey, tex);
+				}
+
+				if (typeof(T) == typeof(LeaEffect))
+				{
+
+				}
+
+
+				return (T)resourceList[uniqueKey];
+			}
 		}
 
+	
 
-		
 
 		public static ContentManager Instance
 		{
@@ -62,11 +78,17 @@ namespace LeaFramework.Content
 
 		}
 
+
 		public void Dispose()
 		{
-			foreach (var texture in textureList)
+			foreach (var resource in resourceList)
 			{
-				texture.Value.Dispose();
+
+				if (resource.Value is LeaTexture2D)
+				{
+					var x = resource.Value as LeaTexture2D;
+					x.Dispose();
+				}
 			}
 		}
 

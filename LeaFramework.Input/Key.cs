@@ -4,7 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LeaFramework.Graphics
+namespace LeaFramework.Input
 {
-	public enum IndexBufferFormat { DXGI_FORMAT_R16_UINT, DXGI_FORMAT_R32_UINT }
+	public enum Key
+	{
+		ESC = 27,
+		W = 87,
+		A = 65,
+		S = 83, 
+		D = 68
+	}
 }
