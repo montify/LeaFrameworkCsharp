@@ -11,14 +11,8 @@ using LeaFramework.Graphics.VertexStructs;
 using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
-using SharpDX.DXGI;
-using SharpDX.WIC;
 using SharpFont;
-using Bitmap = System.Drawing.Bitmap;
-using Color = System.Drawing.Color;
-using PixelFormat = SharpDX.WIC.PixelFormat;
 
-// GLYPH = SpriteInfo
 namespace LeaFramework.Game.SpriteBatch
 {
 	public class SpriteBatch : IDisposable
@@ -67,21 +61,6 @@ namespace LeaFramework.Game.SpriteBatch
 			FontVertex[] v = new FontVertex[1024];
 			vertexBuffer.SetData(v);
 
-			var desc = new BlendStateDescription();
-			desc.RenderTarget[0].IsBlendEnabled = true;
-			desc.RenderTarget[0].SourceBlend  = BlendOption.One;
-			desc.RenderTarget[0].DestinationBlend = BlendOption.InverseSourceAlpha;
-			desc.RenderTarget[0].BlendOperation = BlendOperation.Add;
-			desc.RenderTarget[0].SourceAlphaBlend = BlendOption.One;
-			desc.RenderTarget[0].DestinationAlphaBlend = BlendOption.Zero;
-			desc.RenderTarget[0].AlphaBlendOperation = BlendOperation.Add;
-			desc.RenderTarget[0].RenderTargetWriteMask = ColorWriteMaskFlags.All;
-
-			blendState = new BlendState(graphicsDevice.NatiDevice1.D3D11Device, desc);
-			desc.RenderTarget[0].DestinationBlend = BlendOption.Zero;
-
-			blendStateNormal = new BlendState(graphicsDevice.NatiDevice1.D3D11Device, desc);
-
 		}
 
 		
@@ -104,15 +83,14 @@ namespace LeaFramework.Game.SpriteBatch
 
 		public void End()
 		{
-			if(sortMode == SortMode.Texture)
-				spriteList.Sort((x, y) => x.textureID.CompareTo(y.textureID));
+			//if(sortMode == SortMode.Texture)
+			//	spriteList.Sort((x, y) => x.textureID.CompareTo(y.textureID));
 
-			if (spriteList.Count > 0)
-			{
+			if (spriteList.Count == 0)
+				return;
+
 				CreateRenderBatches();
 				RenderBatches();
-			}
-			
 		}
 
 		private void CreateRenderBatches()
@@ -122,10 +100,11 @@ namespace LeaFramework.Game.SpriteBatch
 			if (spriteList.Count == 0)
 				return;
 
-			int offset = 0;
 			renderBatches.Add(new RenderBatch(spriteList[0].srv, 0, 1));
 
 			vertices.Add(new FontVertex(spriteList[0].position, spriteList[0].size, spriteList[0].color, spriteList[0].offset));
+
+			int offset = 0;
 
 			offset++;
 
@@ -141,6 +120,9 @@ namespace LeaFramework.Game.SpriteBatch
 				offset++;
 			}
 
+			
+			vertices.Reverse();
+
 			vertexBuffer.UpdateBuffer(vertices.ToArray(), 0);
 
 			vertices.Clear();
@@ -151,20 +133,21 @@ namespace LeaFramework.Game.SpriteBatch
 			graphicsDevice.SetTopology(PrimitiveTopology.PointList);
 
 			graphicsDevice.SetVertexBuffer(vertexBuffer);
-			graphicsDevice.SetblendState(blendState);
+			//graphicsDevice.SetblendState(blendState);
+
+			effect.SetVariable("ProjMatrix", "perFrame", MVP, ShaderType.GeometryShader);
+
+			effect.SetSampler(sampler, 0, ShaderType.PixelShader);
 
 			foreach (var rb in renderBatches)
 			{
-				effect.SetVariable("ProjMatrix", "perFrame", MVP, ShaderType.GeometryShader);
-
 				effect.SetTexture(rb.texture, 0, ShaderType.PixelShader);
-				effect.SetSampler(sampler, 0, ShaderType.PixelShader);
-
 				effect.Apply();
-
 				graphicsDevice.Draw(rb.numVertices, rb.offset);
 			}
-			graphicsDevice.SetblendState(blendStateNormal);
+
+			//graphicsDevice.SetblendState(blendStateNormal);
+			
 		}
 
 		public void Dispose()

@@ -4,6 +4,7 @@
 	{
 		VertexShader,
 		PixelShader,
-		GeometryShader
+		GeometryShader,
+		ComputeShader
 	}
 }

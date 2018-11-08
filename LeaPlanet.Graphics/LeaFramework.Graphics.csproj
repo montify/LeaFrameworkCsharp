@@ -79,6 +79,7 @@
     <Compile Include="IndexBuffer.cs" />
     <Compile Include="RenderTarget2D.cs" />
     <Compile Include="LeaTexture2D.cs" />
+    <Compile Include="StructuredBuffer.cs" />
     <Compile Include="TextureBase.cs" />
     <Compile Include="VertexBuffer.cs" />
     <Compile Include="BufferType.cs" />

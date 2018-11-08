@@ -162,8 +162,7 @@ namespace LeaFramework.Effect
 
 
 		public void Apply()
-		{
-			
+		{			
 			ResetShaders();
 			SetShaders();
 			UpdateAndSetConstantBuffers();

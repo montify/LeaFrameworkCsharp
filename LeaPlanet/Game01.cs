@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using LeaFramework.Content;
+using LeaFramework.Effect;
 using LeaFramework.Game;
 using LeaFramework.Game.SpriteBatch;
 using LeaFramework.Graphics;
@@ -20,12 +21,14 @@ namespace LeaFramework.PlayGround
 		//private RenderTarget2D rt;
 		private ShaderResourceView tex, tex1 ;
 		private SpriteBatch spriteBatch;
-		private SpriteFontRenderer spriteFont, spriteFont1;
+		private SpriteFontRenderer spriteFont;
 		LeaTexture2D texture;
 		int track;
 		private float x, y = 10;
 		float xPos;
 		string text ;
+		BlendState bs, bs1;
+		EComputeShader computeShader;
 
 		private bool dirRight = true;
 		public float speed = 2.0f;
@@ -44,16 +47,48 @@ namespace LeaFramework.PlayGround
 		public override void Load()
 		{
 
+			var desc1 = new BlendStateDescription();
+			desc1.RenderTarget[0].IsBlendEnabled = true;
+
+			desc1.RenderTarget[0].BlendOperation = BlendOperation.Add;
+			desc1.RenderTarget[0].AlphaBlendOperation = BlendOperation.Add;
+
+			desc1.RenderTarget[0].SourceBlend = BlendOption.One;
+			desc1.RenderTarget[0].SourceAlphaBlend = BlendOption.One;
+
+			desc1.RenderTarget[0].DestinationBlend = BlendOption.InverseSourceAlpha;
+			desc1.RenderTarget[0].DestinationAlphaBlend = BlendOption.Zero;
+		
+
+			desc1.RenderTarget[0].RenderTargetWriteMask = ColorWriteMaskFlags.All;
+
+			bs = new BlendState(GraphicsDevice.NatiDevice1.D3D11Device, desc1);
+			desc1.RenderTarget[0].DestinationBlend = BlendOption.Zero;
+
+			bs1 = new BlendState(GraphicsDevice.NatiDevice1.D3D11Device, desc1);
+			computeShader = new EComputeShader(GraphicsDevice);
+
+			computeShader.Load("Content//computeShaderTest.hlsl");
+
 			triangle = new Triangle(GraphicsDevice);
 			
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 			spriteFont = new SpriteFontRenderer(GraphicsDevice, "OpenSans-Regular.ttf", 25);
+
+
+			Vector3[] test = { new Vector3(1, 1, 1), new Vector3(2, 2, 2) };
+
+			//StructuredBuffer sb = new StructuredBuffer(GraphicsDevice);
+			//sb.Create(Utilities.SizeOf(test), Utilities.SizeOf<Vector3>());
+			//sb.UpdateBuffer(test, 0);
+			//GraphicsDevice.SetUAV(0, sb.UAV);
+
+			texture = ContentManager.Instance.Load<LeaTexture2D>(GraphicsDevice, "Content//tt.png");
+
 		
 			
 			
 
-			texture = ContentManager.Instance.Load<LeaTexture2D>(GraphicsDevice, "Content//tt.png");
-			
 
 			Task.Factory.StartNew(() =>
 			{
@@ -62,7 +97,7 @@ namespace LeaFramework.PlayGround
 			
 			var desc = new RasterizerStateDescription1
 			{
-				CullMode = CullMode.None,
+				CullMode = CullMode.Back,
 				FillMode = FillMode.Solid
 			};
 
@@ -84,16 +119,16 @@ namespace LeaFramework.PlayGround
 		
 		public override void Update(GameTimer gameTime)
 		{
-			triangle.Update(gameTime, new Vector3(3, 0, 0));
+			//triangle.Update(gameTime, new Vector3(3, 0, 0));
 		}
 
 		public override void Render(GameTimer gameTime)
 		{
 			GraphicsDevice.Clear(ClearFlags.RenderTarget | ClearFlags.DepthBuffer, Color.CornflowerBlue);
 
-			GraphicsDevice.SetRasterizerState(rs);
+			
 
-	
+			#region Input
 			float screenscaleW = (float)GraphicsDevice.ViewPort.Width / 1280;
 			float screenscaleH = (float)GraphicsDevice.ViewPort.Height / 720;
 			var scale = Matrix.Scaling(screenscaleW, screenscaleH, 1);
@@ -130,19 +165,27 @@ namespace LeaFramework.PlayGround
 			{
 				dirRight = true;
 			}
+			#endregion
+
+
+			GraphicsDevice.IsDepthEnable(false);
+			GraphicsDevice.SetRasterizerState(rs);
+			GraphicsDevice.SetblendState(bs);
 
 
 			spriteBatch.Begin(Matrix.Identity);
-			spriteBatch.Submit(texture, new Vector2(x, y), Vector2.Zero, Color.White.ToVector4());
-			spriteBatch.Submit(texture, new Vector2(xPos, 300), Vector2.Zero, Color.White.ToVector4());
+			spriteBatch.Submit(texture, new Vector2(120, 100), Vector2.Zero, Color.Red.ToVector4());
+			spriteBatch.Submit(texture, new Vector2(100, 100), Vector2.Zero, Color.White.ToVector4());
 			spriteBatch.End();
 
 
-			spriteFont.Begin(scale);
-			if (st.Intersects(player))
-				spriteFont.SubmitString("INTERSTECT ", new Vector2(0, 100), Color.Red);
-			
+			spriteFont.Begin(Matrix.Identity);
+			spriteFont.SubmitString("TEST ", new Vector2(120, 120), Color.Red);
 			spriteFont.Draw();
+
+
+			GraphicsDevice.IsDepthEnable(true);
+			GraphicsDevice.SetblendState(bs1);
 
 
 

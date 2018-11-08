@@ -62,34 +62,34 @@ namespace LeaFramework.Game.SpriteBatch
 			sampler = new LeaSamplerState();
 			sampler.GenerateSamplers(graphicsDevice);
 
-			var desc = new BlendStateDescription();
-			desc.RenderTarget[0].IsBlendEnabled = true;
-			desc.RenderTarget[0].SourceBlend = BlendOption.One;
-			desc.RenderTarget[0].DestinationBlend = BlendOption.InverseSourceAlpha;
-			desc.RenderTarget[0].BlendOperation = BlendOperation.Add;
-			desc.RenderTarget[0].SourceAlphaBlend = BlendOption.One;
-			desc.RenderTarget[0].DestinationAlphaBlend = BlendOption.Zero;
-			desc.RenderTarget[0].AlphaBlendOperation = BlendOperation.Add;
-			desc.RenderTarget[0].RenderTargetWriteMask = ColorWriteMaskFlags.All;
+			//var desc = new BlendStateDescription();
+			//desc.RenderTarget[0].IsBlendEnabled = true;
+			//desc.RenderTarget[0].SourceBlend = BlendOption.One;
+			//desc.RenderTarget[0].DestinationBlend = BlendOption.InverseSecondarySourceAlpha;
+			//desc.RenderTarget[0].BlendOperation = BlendOperation.Add;
+			//desc.RenderTarget[0].SourceAlphaBlend = BlendOption.One;
+			//desc.RenderTarget[0].DestinationAlphaBlend = BlendOption.Zero;
+			//desc.RenderTarget[0].AlphaBlendOperation = BlendOperation.Add;
+			//desc.RenderTarget[0].RenderTargetWriteMask = ColorWriteMaskFlags.All;
 
-			blendState = new BlendState(graphicsDevice.NatiDevice1.D3D11Device, desc);
-			desc.RenderTarget[0].DestinationBlend = BlendOption.Zero;
+			//blendState = new BlendState(graphicsDevice.NatiDevice1.D3D11Device, desc);
 
-			blendStateNormal = new BlendState(graphicsDevice.NatiDevice1.D3D11Device, desc);
+		//	desc.RenderTarget[0].DestinationBlend = BlendOption.Zero;
+
+		//	blendStateNormal = new BlendState(graphicsDevice.NatiDevice1.D3D11Device, desc);
 
 			effect.SetVariable("textureAtlasResWidthHeight", "startUp", 512, ShaderType.GeometryShader);
 
 			var glyphBitMapList = CollectGlyphs(fontName, fontSize);
 
-			 CreateTextureAtlas(glyphBitMapList);
+			CreateTextureAtlas(glyphBitMapList);
 
-			
 			CreateTexture2D();
 
 			vertexBuffer = new VertexBuffer(graphicsDevice, BufferType.Dynamic);
 			vertexBuffer.SetData(vertices);
 
-			textureAtlas.Save("HMMM.bmp");
+			//textureAtlas.Save("HMMM.bmp");
 		}
 
 		private Dictionary<char, GlyphSlot> CollectGlyphs(string fontName, int fontSize)
@@ -111,7 +111,6 @@ namespace LeaFramework.Game.SpriteBatch
 			
 			return glyphBitmapList;
 		}
-
 
 		private void CreateTextureAtlas(Dictionary<char, GlyphSlot> glyphBitmapList)
 		{
@@ -189,7 +188,10 @@ namespace LeaFramework.Game.SpriteBatch
 		public void SubmitString(string str, Vector2 position, Color color)
 		{
 
-			if (string.IsNullOrEmpty(str)) return;
+			if (string.IsNullOrEmpty(str))
+				return;
+
+
 			for (int i = 0; i < str.Length; i++)
 			{
 				var character = GlyphList[str[i]];
@@ -231,22 +233,11 @@ namespace LeaFramework.Game.SpriteBatch
 			graphicsDevice.SetTopology(PrimitiveTopology.PointList);
 
 		
-			graphicsDevice.SetblendState(blendState);
-
-			//TODO: MAX BATCH SIZE NOT * 2
-			//	var vertices = new FontVertex[spriteInfoList.Count +10];
-
-
-			//Parallel.For(0, spriteInfoList.Count, i =>
-			//{
-			//	vertices[i] = new FontVertex(spriteInfoList[i].position, spriteInfoList[i].size, spriteInfoList[i].color, spriteInfoList[i].offset);
-			//});
+			//graphicsDevice.SetblendState(blendState);
 
 			for (int i = 0; i < spriteCount; i++)
-			{
 				vertices[i] = new FontVertex(spriteInfoList[i].position, spriteInfoList[i].size, spriteInfoList[i].color, spriteInfoList[i].offset);
-			}
-
+	
 
 			vertexBuffer.UpdateBuffer(vertices, 0, spriteCount);
 
@@ -258,7 +249,8 @@ namespace LeaFramework.Game.SpriteBatch
 			effect.Apply();
 
 			graphicsDevice.Draw(spriteCount, 0);
-			graphicsDevice.SetblendState(blendStateNormal);
+
+			//graphicsDevice.SetblendState(blendStateNormal);
 
 			spriteInfoList.Clear();
 			spriteCount = 0;

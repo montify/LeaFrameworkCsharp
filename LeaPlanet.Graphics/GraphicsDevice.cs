@@ -30,6 +30,7 @@ namespace LeaFramework.Graphics
 		private Viewport currentViewport;
 		private BlendState currentBlendState;
 		private RasterizerState currentRsState;
+		private bool isDepthEnabled;
 
 		public GraphicsDevice(RenderForm renderForm)
 		{
@@ -203,6 +204,21 @@ namespace LeaFramework.Graphics
 			currentPixelShader = pixelShader;
 			nativeDevice.D3D11Device.ImmediateContext1.PixelShader.Set(pixelShader);
 		}
+		public void SetComputeShader(ComputeShader computeShader)
+		{
+			
+			nativeDevice.D3D11Device.ImmediateContext1.ComputeShader.Set(computeShader);
+		}
+
+		public void SetUAV(int slot, UnorderedAccessView uav)
+		{
+			nativeDevice.D3D11Device.ImmediateContext1.ComputeShader.SetUnorderedAccessView(slot, uav);
+
+		}
+		public void Dispatch(int x, int y, int z)
+		{
+			nativeDevice.D3D11Device.ImmediateContext1.Dispatch(x, y, z);
+		}
 
 		//public void SetRenderTarget(RenderTarget2D renderTarget)
 		//{
@@ -240,7 +256,16 @@ namespace LeaFramework.Graphics
 				currentRsState = rs;
 			}
 		}
-	
+
+		public void IsDepthEnable(bool isDepthTesting)
+		{
+			if(isDepthTesting)
+				nativeDevice.D3D11Device.ImmediateContext1.OutputMerger.SetRenderTargets(depthBuffer.DepthStencilView, renderTargetView);
+			else
+				nativeDevice.D3D11Device.ImmediateContext1.OutputMerger.SetRenderTargets(renderTargetView);
+		}
+
+
 		public void Present(bool isVSyncEbable)
 		{
 			IsShaderSwitchHappen = false;

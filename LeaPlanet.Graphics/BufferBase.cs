@@ -10,7 +10,7 @@ namespace LeaFramework.Graphics
 	{
 		protected Buffer buffer;
 		protected GraphicsDevice graphicsDevice;
-		protected BufferDescription bufferDesc = new BufferDescription();
+		protected BufferDescription bufferDesc;
 		public int SizeInBytes { get; protected set; }
 		protected string debugName;
 		protected BindFlags binfFlags;
@@ -29,6 +29,7 @@ namespace LeaFramework.Graphics
 
 			graphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.UnmapSubresource(buffer, 0);
 		}
+
 		public void UpdateBuffer<T>(T[] data, int offset) where T : struct
 		{
 			if (bufferType == BufferType.Normal)
