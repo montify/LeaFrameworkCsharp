@@ -7,12 +7,15 @@ struct PS_IN
     float4 Position : SV_POSITION0;
     float4 Color : COLOR0;
     float2 UVCoordinate : TEXCOORD;
+
 };
 
 float4 PSMain(PS_IN input) : SV_Target
 {
-    float4 t = tex.Sample(samp, input.UVCoordinate);
+    float4 finalColor;
+
+   
+      finalColor = tex.Sample(samp, input.UVCoordinate) * input.Color;
     
-    
-    return float4(t.xyz, 0);
+    return finalColor;
 }

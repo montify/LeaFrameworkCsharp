@@ -9,12 +9,12 @@ using SharpFont;
 
 namespace LeaFramework.Game.SpriteBatch
 {
-	public struct Glyph
+	public struct GlyphInfo
 	{
 		public GlyphMetrics metrics;
 		public Vector2 offset;
 
-		public Glyph(GlyphMetrics metrics, Vector2 offset)
+		public GlyphInfo(GlyphMetrics metrics, Vector2 offset)
 		{
 			this.metrics = metrics;
 			this.offset = offset;

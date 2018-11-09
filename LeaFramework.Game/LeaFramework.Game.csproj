@@ -29,6 +29,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SharpDX, Version=2.6.3.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
@@ -83,7 +84,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="SpriteBatch\BitmapHelper.cs" />
-    <Compile Include="SpriteBatch\Glyph.cs" />
+    <Compile Include="SpriteBatch\GlyphInfo.cs" />
     <Compile Include="SpriteBatch\RenderBatch.cs" />
     <Compile Include="SpriteBatch\SortMode.cs" />
     <Compile Include="SpriteBatch\SpriteBatch.cs" />
@@ -111,15 +112,6 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="SpriteBatch\Shaders\geometryShader.hlsl" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="SpriteBatch\Shaders\pixelShader.hlsl" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="SpriteBatch\Shaders\vertexShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SpriteBatch\FontShaders\geometryShaderFont.hlsl">

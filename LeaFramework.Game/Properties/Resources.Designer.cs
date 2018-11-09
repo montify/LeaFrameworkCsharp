@@ -61,19 +61,26 @@ namespace LeaFramework.Game.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die cbuffer perFrame
+        ///   Sucht eine lokalisierte Zeichenfolge, die cbuffer startUp
+        ///{
+        ///    int textureAtlasResWidthHeight;
+        ///};
+        ///
+        ///cbuffer perFrame
         ///{
         ///    float4x4 ProjMatrix;
         ///    float scaleSizeX;
         ///    float scaleSizeY;
         ///};
         ///
+        ///
         ///struct GS_IN
         ///{
         ///    float2 Position : POSITION;
         ///    float2 Size : TEXCOORD;
         ///    float4 Color : COLOR;
-        ///    int TextureID : BLENDINDICES;
+        ///    float2 offset : TEXCOORD1;
+        ///    bool isFont : UNICORN;
         ///};
         ///
         ///struct PS_IN
@@ -81,48 +88,11 @@ namespace LeaFramework.Game.Properties {
         ///    float4 Position : SV_POSITION0;
         ///    float4 Color : COLOR0;
         ///    float2 UVCoordinate : TEXCOORD;
-        ///    int TextureID : BLENDINDICES;
+        ///  
         ///};
         ///
         ///[maxvertexcount(4)]
-        ///void GSMain(point GS_IN input[1], inout TriangleStream&lt;PS_IN&gt; triStream)
-        ///{
-        ///    PS_I [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
-        /// </summary>
-        internal static string geometryShader {
-            get {
-                return ResourceManager.GetString("geometryShader", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die cbuffer perFrame
-        ///{
-        ///    float4x4 ProjMatrix;
-        ///    float scaleSizeX;
-        ///    float scaleSizeY;
-        ///};
-        ///
-        ///struct GS_IN
-        ///{
-        ///    float2 Position : POSITION;
-        ///    float2 Size : TEXCOORD;
-        ///    float4 Color : COLOR;
-        ///    int TextureID : BLENDINDICES;
-        ///};
-        ///
-        ///struct PS_IN
-        ///{
-        ///    float4 Position : SV_POSITION0;
-        ///    float4 Color : COLOR0;
-        ///    float2 UVCoordinate : TEXCOORD;
-        ///    int TextureID : BLENDINDICES;
-        ///};
-        ///
-        ///[maxvertexcount(4)]
-        ///void GSMain(point GS_IN input[1], inout TriangleStream&lt;PS_IN&gt; triStream)
-        ///{
-        ///    PS_I [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
+        ///void GSMain(point GS_IN in [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
         /// </summary>
         internal static string geometryShaderFont {
             get {
@@ -140,42 +110,17 @@ namespace LeaFramework.Game.Properties {
         ///    float4 Position : SV_POSITION0;
         ///    float4 Color : COLOR0;
         ///    float2 UVCoordinate : TEXCOORD;
-        ///    int TextureID : BLENDINDICES;
+        ///
         ///};
         ///
         ///float4 PSMain(PS_IN input) : SV_Target
         ///{
-        ///    int x = input.TextureID;
-        ///    float4 t = tex.Sample(samp, input.UVCoordinate);
+        ///    float4 finalColor;
+        ///
+        ///   
+        ///      finalColor = tex.Sample(samp, input.UVCoordinate) * input.Color;
         ///    
-        ///    return t;
-        ///} ähnelt.
-        /// </summary>
-        internal static string pixelShader {
-            get {
-                return ResourceManager.GetString("pixelShader", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Texture2D tex : register(t0);
-        ///SamplerState samp;
-        ///
-        ///
-        ///struct PS_IN
-        ///{
-        ///    float4 Position : SV_POSITION0;
-        ///    float4 Color : COLOR0;
-        ///    float2 UVCoordinate : TEXCOORD;
-        ///    int TextureID : BLENDINDICES;
-        ///};
-        ///
-        ///float4 PSMain(PS_IN input) : SV_Target
-        ///{
-        ///    int x = input.TextureID;
-        ///    float4 t = tex.Sample(samp, input.UVCoordinate);
-        ///    
-        ///    return t;
+        ///    return finalColor;
         ///} ähnelt.
         /// </summary>
         internal static string pixelShaderFont {
@@ -190,7 +135,8 @@ namespace LeaFramework.Game.Properties {
         ///    float2 Position : POSITION0;
         ///    float2 Size : TEXCOORD;
         ///    float4 Color : COLOR0;
-        ///    int TextureID : BLENDINDICES;
+        ///    float2 offset : TEXCOORD1;
+        ///    bool isFont : UNICORN;
         ///};
         ///
         ///struct GS_IN
@@ -198,7 +144,8 @@ namespace LeaFramework.Game.Properties {
         ///    float2 Position : POSITION;
         ///    float2 Size : TEXCOORD;
         ///    float4 Color : COLOR;
-        ///    int TextureID : BLENDINDICES;
+        ///    float2 offset : TEXCOORD1;
+        ///    bool isFont : UNICORN;
         ///
         ///};
         ///
@@ -209,44 +156,7 @@ namespace LeaFramework.Game.Properties {
         ///    output.Position = input.Position;
         ///    output.Size = input.Size;
         ///    output.Color = input.Color;
-        ///    output.TextureID = input.TextureID;
-        ///
-        ///    return output [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
-        /// </summary>
-        internal static string vertexShader {
-            get {
-                return ResourceManager.GetString("vertexShader", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die struct VS_IN
-        ///{
-        ///    float2 Position : POSITION0;
-        ///    float2 Size : TEXCOORD;
-        ///    float4 Color : COLOR0;
-        ///    int TextureID : BLENDINDICES;
-        ///};
-        ///
-        ///struct GS_IN
-        ///{
-        ///    float2 Position : POSITION;
-        ///    float2 Size : TEXCOORD;
-        ///    float4 Color : COLOR;
-        ///    int TextureID : BLENDINDICES;
-        ///
-        ///};
-        ///
-        ///GS_IN VSMain(VS_IN input)
-        ///{
-        ///    GS_IN output;
-        ///
-        ///    output.Position = input.Position;
-        ///    output.Size = input.Size;
-        ///    output.Color = input.Color;
-        ///    output.TextureID = input.TextureID;
-        ///
-        ///    return output [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
+        ///    output [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
         /// </summary>
         internal static string vertexShaderFont {
             get {

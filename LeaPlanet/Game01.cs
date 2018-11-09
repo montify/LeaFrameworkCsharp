@@ -21,13 +21,13 @@ namespace LeaFramework.PlayGround
 		//private RenderTarget2D rt;
 		private ShaderResourceView tex, tex1 ;
 		private SpriteBatch spriteBatch;
-		private SpriteFontRenderer spriteFont;
+		
 		LeaTexture2D texture;
 		int track;
 		private float x, y = 10;
 		float xPos;
 		string text ;
-		BlendState bs, bs1;
+		SpriteFont sf;
 		EComputeShader computeShader;
 
 		private bool dirRight = true;
@@ -36,7 +36,7 @@ namespace LeaFramework.PlayGround
 		public Game01()
 		{
 			WindowTitle = "Framework ALEX 0.01";
-			IsVSyncEnable = true;
+			IsVSyncEnable = false;
 			
 			WindowWidth = 1280;
 			WindowHeight = 720;
@@ -47,25 +47,7 @@ namespace LeaFramework.PlayGround
 		public override void Load()
 		{
 
-			var desc1 = new BlendStateDescription();
-			desc1.RenderTarget[0].IsBlendEnabled = true;
-
-			desc1.RenderTarget[0].BlendOperation = BlendOperation.Add;
-			desc1.RenderTarget[0].AlphaBlendOperation = BlendOperation.Add;
-
-			desc1.RenderTarget[0].SourceBlend = BlendOption.One;
-			desc1.RenderTarget[0].SourceAlphaBlend = BlendOption.One;
-
-			desc1.RenderTarget[0].DestinationBlend = BlendOption.InverseSourceAlpha;
-			desc1.RenderTarget[0].DestinationAlphaBlend = BlendOption.Zero;
-		
-
-			desc1.RenderTarget[0].RenderTargetWriteMask = ColorWriteMaskFlags.All;
-
-			bs = new BlendState(GraphicsDevice.NatiDevice1.D3D11Device, desc1);
-			desc1.RenderTarget[0].DestinationBlend = BlendOption.Zero;
-
-			bs1 = new BlendState(GraphicsDevice.NatiDevice1.D3D11Device, desc1);
+			sf = new SpriteFont(GraphicsDevice, "OpenSans-Regular.ttf", 25);
 			computeShader = new EComputeShader(GraphicsDevice);
 
 			computeShader.Load("Content//computeShaderTest.hlsl");
@@ -73,7 +55,7 @@ namespace LeaFramework.PlayGround
 			triangle = new Triangle(GraphicsDevice);
 			
 			spriteBatch = new SpriteBatch(GraphicsDevice);
-			spriteFont = new SpriteFontRenderer(GraphicsDevice, "OpenSans-Regular.ttf", 25);
+			
 
 
 			Vector3[] test = { new Vector3(1, 1, 1), new Vector3(2, 2, 2) };
@@ -83,7 +65,7 @@ namespace LeaFramework.PlayGround
 			//sb.UpdateBuffer(test, 0);
 			//GraphicsDevice.SetUAV(0, sb.UAV);
 
-			texture = ContentManager.Instance.Load<LeaTexture2D>(GraphicsDevice, "Content//tt.png");
+			texture = ContentManager.Instance.Load<LeaTexture2D>(GraphicsDevice, "Content//uvTestTexSmall.png");
 
 		
 			
@@ -113,7 +95,7 @@ namespace LeaFramework.PlayGround
 			rs.Dispose();
 		//	triangle.Dispose();
 		//	spriteBatch.Dispose();
-			spriteFont.Dispose();
+		
 			ContentManager.Instance.Dispose();
 		}
 		
@@ -168,24 +150,27 @@ namespace LeaFramework.PlayGround
 			#endregion
 
 
-			GraphicsDevice.IsDepthEnable(false);
+		
 			GraphicsDevice.SetRasterizerState(rs);
-			GraphicsDevice.SetblendState(bs);
+			
 
 
-			spriteBatch.Begin(Matrix.Identity);
-			spriteBatch.Submit(texture, new Vector2(120, 100), Vector2.Zero, Color.Red.ToVector4());
-			spriteBatch.Submit(texture, new Vector2(100, 100), Vector2.Zero, Color.White.ToVector4());
+			spriteBatch.Begin(Matrix.Identity, SortMode.Immediate);
+			
+			//spriteBatch.Submit(texture, new Vector2(100, 100), Vector2.Zero, Color.White.ToVector4());
+			spriteBatch.Submit(texture, new Vector2(100, 100), Vector2.Zero, Color.Green);
+			spriteBatch.SubmitString(sf, "Was |n geht ab? |n Was hast du heute so gemacht? |n Lol ", new Vector2(150, 150), Color.Red);
+		
 			spriteBatch.End();
 
 
-			spriteFont.Begin(Matrix.Identity);
-			spriteFont.SubmitString("TEST ", new Vector2(120, 120), Color.Red);
-			spriteFont.Draw();
+			//spriteFont.Begin(Matrix.Identity);
+			//spriteFont.SubmitString("TEST ", new Vector2(120, 120), Color.Red);
+			//spriteFont.Draw();
 
 
-			GraphicsDevice.IsDepthEnable(true);
-			GraphicsDevice.SetblendState(bs1);
+			
+		
 
 
 

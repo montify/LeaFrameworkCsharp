@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace LeaFramework.Game.SpriteBatch
 {
-	public enum SortMode { BackToFront, FrontToBack, Texture }
+	public enum SortMode { BackToFront, FrontToBack, Texture, Immediate }
 }

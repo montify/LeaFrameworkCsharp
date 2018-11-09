@@ -4,6 +4,7 @@
     float2 Size : TEXCOORD;
     float4 Color : COLOR0;
     float2 offset : TEXCOORD1;
+    bool isFont : UNICORN;
 };
 
 struct GS_IN
@@ -12,6 +13,7 @@ struct GS_IN
     float2 Size : TEXCOORD;
     float4 Color : COLOR;
     float2 offset : TEXCOORD1;
+    bool isFont : UNICORN;
 
 };
 
@@ -23,7 +25,7 @@ GS_IN VSMain(VS_IN input)
     output.Size = input.Size;
     output.Color = input.Color;
     output.offset = input.offset;
-
+    output.isFont = input.isFont;
     return output;
 }
 

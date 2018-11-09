@@ -11,6 +11,8 @@ namespace LeaFramework.Graphics.VertexStructs
 		public int TextureID;
 
 
+
+
 		public SpriteBatchVertex(Vector2 position, Vector2 size, Vector4 color, int textureID)
 		{
 			Position = position;
