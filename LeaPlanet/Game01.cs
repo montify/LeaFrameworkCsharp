@@ -4,6 +4,8 @@ using LeaFramework.Effect;
 using LeaFramework.Game;
 using LeaFramework.Game.SpriteBatch;
 using LeaFramework.Graphics;
+using LeaFramework.GUI;
+using LeaFramework.GUI.Widgets;
 using LeaFramework.Input;
 using PlayGround;
 using SharpDX;
@@ -16,22 +18,19 @@ namespace LeaFramework.PlayGround
 	public class Game01 : LeaPlanet.src.Game
 	{
 		private Triangle triangle;
-
-		private RasterizerState1 rs, rs1;
-		//private RenderTarget2D rt;
-		private ShaderResourceView tex, tex1 ;
+		private RasterizerState1 rs;
 		private SpriteBatch spriteBatch;
-		
 		LeaTexture2D texture;
-		int track;
 		private float x, y = 10;
 		float xPos;
-		string text ;
+	
 		SpriteFont sf;
 		EComputeShader computeShader;
+		GuiManager gManager;
 
 		private bool dirRight = true;
 		public float speed = 2.0f;
+		string t;
 
 		public Game01()
 		{
@@ -46,30 +45,31 @@ namespace LeaFramework.PlayGround
 
 		public override void Load()
 		{
-
-			sf = new SpriteFont(GraphicsDevice, "OpenSans-Regular.ttf", 25);
+			
+			sf = new SpriteFont(GraphicsDevice, "orange.ttf", 30);
+			
 			computeShader = new EComputeShader(GraphicsDevice);
-
 			computeShader.Load("Content//computeShaderTest.hlsl");
 
 			triangle = new Triangle(GraphicsDevice);
 			
 			spriteBatch = new SpriteBatch(GraphicsDevice);
-			
-
 
 			Vector3[] test = { new Vector3(1, 1, 1), new Vector3(2, 2, 2) };
 
-			//StructuredBuffer sb = new StructuredBuffer(GraphicsDevice);
-			//sb.Create(Utilities.SizeOf(test), Utilities.SizeOf<Vector3>());
-			//sb.UpdateBuffer(test, 0);
-			//GraphicsDevice.SetUAV(0, sb.UAV);
+			texture = ContentManager.Instance.Load<LeaTexture2D>(GraphicsDevice, "Content//button.png");
 
-			texture = ContentManager.Instance.Load<LeaTexture2D>(GraphicsDevice, "Content//uvTestTexSmall.png");
+			gManager = new GuiManager(GraphicsDevice, sf);
 
+			Button b = new Button("Button", new Vector2(130, 40), new Vector2(200, 100), texture, false, GraphicsDevice);
+			Button b1 = new Button("Button", new Vector2(130, 40), new Vector2(200, 150), texture, false, GraphicsDevice);
+			Button b2 = new Button("A * -", new Vector2(130, 40), new Vector2(200, 200), texture, false, GraphicsDevice);
+			Button b3 = new Button("Button", new Vector2(130, 40), new Vector2(200, 250), texture, false, GraphicsDevice);
 		
-			
-			
+			gManager.AddWidget(b);
+			gManager.AddWidget(b1);
+			gManager.AddWidget(b2);
+			gManager.AddWidget(b3);
 
 
 			Task.Factory.StartNew(() =>
@@ -93,20 +93,27 @@ namespace LeaFramework.PlayGround
 		{
 
 			rs.Dispose();
-		//	triangle.Dispose();
-		//	spriteBatch.Dispose();
+			triangle.Dispose();
+			spriteBatch.Dispose();
 		
 			ContentManager.Instance.Dispose();
 		}
 		
 		public override void Update(GameTimer gameTime)
 		{
-			//triangle.Update(gameTime, new Vector3(3, 0, 0));
+			gManager.Update();
+			triangle.Update(gameTime, new Vector3(-3, 1, 0));
+
+			if (InputManager.Instance.IsKeyDown(Key.A))
+				gManager.IsVisible = false;
+			else
+				gManager.IsVisible = true;
+
 		}
 
 		public override void Render(GameTimer gameTime)
 		{
-			GraphicsDevice.Clear(ClearFlags.RenderTarget | ClearFlags.DepthBuffer, Color.CornflowerBlue);
+			GraphicsDevice.Clear(ClearFlags.RenderTarget | ClearFlags.DepthBuffer, new Color(37,37,38));
 
 			
 
@@ -117,63 +124,64 @@ namespace LeaFramework.PlayGround
 
 			if (InputManager.Instance.IsKeyDown(Key.ESC)) IsRunning = false;
 
-			if (InputManager.Instance.IsKeyDown(Key.W))
-				y -= 300 * gameTime.DeltaTime;
+			//if (InputManager.Instance.IsKeyDown(Key.W))
+			//	y -= 300 * gameTime.DeltaTime;
 
-			if (InputManager.Instance.IsKeyDown(Key.S))
-				y += 300 * gameTime.DeltaTime;
+			//if (InputManager.Instance.IsKeyDown(Key.S))
+			//	y += 300 * gameTime.DeltaTime;
 
-			if (InputManager.Instance.IsKeyDown(Key.A))
-				x -= 300 * gameTime.DeltaTime;
-			if (InputManager.Instance.IsKeyDown(Key.D))
-				x += 300 * gameTime.DeltaTime;
-
-
-			RectangleF player = new RectangleF(x, y, 100, 100);
-			RectangleF st = new RectangleF(xPos, 300, 100, 100);
+			//if (InputManager.Instance.IsKeyDown(Key.A))
+			//	x -= 300 * gameTime.DeltaTime;
+			//if (InputManager.Instance.IsKeyDown(Key.D))
+			//	x += 300 * gameTime.DeltaTime;
 
 
-			if (dirRight)
-				xPos += 400 * gameTime.DeltaTime;
-			else
-				xPos -= 400 * gameTime.DeltaTime;
+			//RectangleF player = new RectangleF(x, y, 100, 100);
+			//RectangleF st = new RectangleF(xPos, 300, 100, 100);
 
 
-			if (xPos >= GraphicsDevice.ViewPort.Width-100)
-			{
-				dirRight = false;
-			}
-			if (xPos <= 0)
-			{
-				dirRight = true;
-			}
+			//if (dirRight)
+			//	xPos += 400 * gameTime.DeltaTime;
+			//else
+			//	xPos -= 400 * gameTime.DeltaTime;
+
+
+			//if (xPos >= GraphicsDevice.ViewPort.Width-100)
+			//{
+			//	dirRight = false;
+			//}
+			//if (xPos <= 0)
+			//{
+			//	dirRight = true;
+			//}
 			#endregion
 
 
 		
 			GraphicsDevice.SetRasterizerState(rs);
-			
+
+				spriteBatch.Begin(scale, SortMode.Immediate);
+
+			spriteBatch.SubmitString(sf, 
+				"Purple Haze all in my brain |n lately things don't seem the same, |n |n actin' funny but I don't know why |n 'scuse me while I kiss the sky." +
+				"Purple Haze all in my brain |n lately things don't seem the same, |n |n actin' funny but I don't know why |n |n'scuse me while I kiss the sky." +
+				"Purple Haze all in my brain |n lately things don't seem the same, |n |n actin' funny but I don't know why |n |n 'scuse me while I kiss the sky." +
+				"|n + / * - , 0 1234 567890",
+				new Vector2(400, 200), Color.ForestGreen);
 
 
-			spriteBatch.Begin(Matrix.Identity, SortMode.Immediate);
+				spriteBatch.SubmitString(sf, "int main(string[] args...) |n { |n   " +  CurrentFps +"|n };", new Vector2(600,50), Color.Peru);
+
+				spriteBatch.End();
+
+
 			
-			//spriteBatch.Submit(texture, new Vector2(100, 100), Vector2.Zero, Color.White.ToVector4());
-			spriteBatch.Submit(texture, new Vector2(100, 100), Vector2.Zero, Color.Green);
-			spriteBatch.SubmitString(sf, "Was |n geht ab? |n Was hast du heute so gemacht? |n Lol ", new Vector2(150, 150), Color.Red);
+			triangle.Render(Color.White.ToVector3());
+
 		
-			spriteBatch.End();
 
 
-			//spriteFont.Begin(Matrix.Identity);
-			//spriteFont.SubmitString("TEST ", new Vector2(120, 120), Color.Red);
-			//spriteFont.Draw();
-
-
-			
-		
-
-
-
+			gManager.Draw(scale);
 		}
 
 	}

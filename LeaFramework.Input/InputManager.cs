@@ -1,10 +1,7 @@
-﻿using SharpDX.Windows;
-using System;
+﻿using SharpDX;
+using SharpDX.Windows;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+
 
 namespace LeaFramework.Input
 {
@@ -12,7 +9,9 @@ namespace LeaFramework.Input
 	{
 		private static InputManager instance = null;
 		private static readonly object padlock = new object();
-		private  bool isKeyDown;
+	
+
+		public Vector2 MousePosition;
 
 		private Dictionary<int, bool> keyList = new Dictionary<int, bool>(100);
 
@@ -27,7 +26,6 @@ namespace LeaFramework.Input
 
 		public void Listen(RenderForm renderForm)
 		{
-
 			renderForm.KeyDown += (object sender, System.Windows.Forms.KeyEventArgs e) =>
 			{
 				keyList[e.KeyValue] = true;
@@ -38,13 +36,17 @@ namespace LeaFramework.Input
 				keyList[e.KeyValue] = false;
 			};
 
+			renderForm.MouseMove += (object sender, System.Windows.Forms.MouseEventArgs e) =>
+			{
+				MousePosition.X = e.X;
+				MousePosition.Y = e.Y;
+			};
 		}
 
 		public bool IsKeyDown(Key key)
 		{
 			return keyList[(int)key];
 		}
-
 
 		public static InputManager Instance
 		{

@@ -13,9 +13,11 @@ namespace LeaFramework.Graphics
 	{
 		private Texture2D depthBufferTexture;
 		private DepthStencilView depthStencilView;
+	
 
 		public Texture2D DepthBufferTexture => depthBufferTexture;
 		public DepthStencilView DepthStencilView => depthStencilView;
+		
 
 		public DepthBuffer(NativeDevice nativeDevice, int width, int height)
 		{
@@ -33,7 +35,14 @@ namespace LeaFramework.Graphics
 				OptionFlags = ResourceOptionFlags.None
 			});
 
+			
+		
+
+
+
+
 			depthStencilView = new DepthStencilView(nativeDevice.D3D11Device, depthBufferTexture);
+			
 		}
 
 		public void Dispose()

@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeaFramework.Content", "Lea
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeaFramework.Input", "LeaFramework.Input\LeaFramework.Input.csproj", "{279E7364-7905-4272-AF3E-A151DE065557}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeaFramework.GUI", "LeaFramework.GUI\LeaFramework.GUI.csproj", "{1FECD2B2-7C58-4A31-B682-7096DDA63CC2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{279E7364-7905-4272-AF3E-A151DE065557}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{279E7364-7905-4272-AF3E-A151DE065557}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{279E7364-7905-4272-AF3E-A151DE065557}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FECD2B2-7C58-4A31-B682-7096DDA63CC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FECD2B2-7C58-4A31-B682-7096DDA63CC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FECD2B2-7C58-4A31-B682-7096DDA63CC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FECD2B2-7C58-4A31-B682-7096DDA63CC2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

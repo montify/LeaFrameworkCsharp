@@ -45,9 +45,9 @@ namespace PlayGround
 		{
 			var vertices = new VertexPositionColor[3];
 
-			vertices[0].Position = new Vector3(-1.0f, 1.0f, 0.0f);
-			vertices[1].Position = new Vector3(0.0f, 1.0f, 0.0f);
-			vertices[2].Position = new Vector3(-1.0f, -1.0f, 0.0f);
+			vertices[0].Position = new Vector3(-1.0f, 1.0f, 1.0f);
+			vertices[1].Position = new Vector3(0.0f, 1.0f, 1.0f);
+			vertices[2].Position = new Vector3(-1.0f, -1.0f, 1.0f);
 		
 
 			vertices[0].Color = Color.Orange.ToVector4();

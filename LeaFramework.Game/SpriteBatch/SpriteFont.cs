@@ -32,13 +32,13 @@ namespace LeaFramework.Game.SpriteBatch
 			CreateTextureAtlas(collectedGlyphBitmaps);
 
 			CreateTexture2D();
+
+		//	TextureAtlas.Save("Hegh.bmp", ImageFormat.Bmp);
 		}
 
 		private Dictionary<char, GlyphSlot> CollectGlyphs(string fontName, int fontSize)
 		{
 			var glyphBitmapList = new Dictionary<char, GlyphSlot>();
-
-			
 
 			for (int i = 0; i < 128; i++)
 			{
@@ -55,10 +55,8 @@ namespace LeaFramework.Game.SpriteBatch
 			return glyphBitmapList;
 		}
 
-
 		private void CreateTextureAtlas(Dictionary<char, GlyphSlot> glyphBitmapList)
 		{
-
 			// SORT LIST 
 			int offsetX = 0;
 			int offsetY = 0;
@@ -79,18 +77,18 @@ namespace LeaFramework.Game.SpriteBatch
 							(int)currentGlyph.Metrics.Height));
 				}
 
-				//IF roughly reach the Bitmap border, make a new Line
-				if (offsetX + currentGlyph.Metrics.Width >= TextureAtlasWidthHeight - 60)
-				{
-					offsetY += currentGlyph.Metrics.Height.ToInt32() + 25;
-					offsetX = 0;
-				}
 
 				glyphList.Add(glyph.Key,
 					new GlyphInfo(currentGlyph.Metrics, new Vector2(offsetX, offsetY)));
 
+				//IF roughly reach the Bitmap border, make a new Line
+				if (offsetX + currentGlyph.Metrics.Width >= TextureAtlasWidthHeight - 100)
+				{
+					offsetY += currentGlyph.Metrics.Height.ToInt32() + 28;
+					offsetX = 0;
+				}
 
-				offsetX += currentGlyph.Bitmap.Width;
+				offsetX += currentGlyph.Bitmap.Width +10;
 			}
 		}
 
@@ -117,8 +115,50 @@ namespace LeaFramework.Game.SpriteBatch
 			TextureAtlas.UnlockBits(data);
 
 			textureAtlasSRV = new ShaderResourceView(graphicsDevice.NatiDevice1.D3D11Device, ret);
+		}
 
+	
+		public Vector2 MeasureString(string str)
+		{
+			var currentPos = new Vector2();
 
+			float highestGlyph = 0;
+
+			for (int i = 0; i < str.Length; i++)
+			{
+				var character = glyphList[str[i]];
+
+				// new Line
+				if (str[i] == '|' && str[i + 1] == 'n')
+				{
+					currentPos.Y += character.metrics.Height.ToSingle();
+					currentPos.X = 0;
+					continue;
+				}
+				//if Character != WhiteSpace
+				if (str[i] != ' ')
+				{
+					var metrics = glyphList[str[i]].metrics;
+					var xpos = metrics.HorizontalAdvance.ToSingle() + metrics.HorizontalBearingX.ToSingle();
+					currentPos.X += xpos;
+					currentPos.Y = highestGlyph;
+
+					highestGlyph = metrics.Height.ToSingle();
+
+					// Find Glyph with highest Y value
+					if (metrics.Height.ToSingle() > highestGlyph)
+						highestGlyph = metrics.Height.ToSingle();
+				}
+				else
+				{
+					currentPos.X += character.metrics.HorizontalAdvance.ToInt32();
+				}
+
+				
+				
+			}
+
+			return currentPos;
 		}
 
 	}

@@ -16,6 +16,7 @@ namespace LeaFramework.Graphics
 		private DepthBuffer depthBuffer;
 		public NativeDevice NatiDevice1 => nativeDevice;
 		public Viewport ViewPort { get; private set; }
+		private LeaDepthStencilState depthStateEnable, depthStateDisable;
 
 		public bool IsShaderSwitchHappen;
 
@@ -47,6 +48,8 @@ namespace LeaFramework.Graphics
 			SetViewPort(ViewPort);
 
 			nativeDevice.D3D11Device.ImmediateContext1.OutputMerger.SetRenderTargets(depthBuffer.DepthStencilView, renderTargetView);
+			//nativeDevice.D3D11Device.ImmediateContext1.OutputMerger.SetDepthStencilState(depthStateEnable.DepthStencilState);
+			nativeDevice.D3D11Device.ImmediateContext1.OutputMerger.DepthStencilState = depthStateEnable.DepthStencilState;
 		}
 
 		private void CreateDeviceAndSwapChain()
@@ -56,12 +59,15 @@ namespace LeaFramework.Graphics
 			backBuffer = new BackBuffer(nativeDevice.GetFactory2(), nativeDevice.D3D11Device, renderForm);
 
 			renderTargetView = new RenderTargetView(nativeDevice.D3D11Device, backBuffer.BackBufferTexture);
-
+			
 			ViewPort = new Viewport(0, 0, renderForm.Width, renderForm.Height, 0, 1);
 		}
 
 		private void CreateDepthBuffer(int width, int height)
 		{
+			depthStateEnable = new LeaDepthStencilState(nativeDevice, true);
+			depthStateDisable = new LeaDepthStencilState(nativeDevice, false);
+
 			depthBuffer = new DepthBuffer(nativeDevice, width, height);
 		}
 
@@ -82,7 +88,7 @@ namespace LeaFramework.Graphics
 			renderTargetView = new RenderTargetView(nativeDevice.D3D11Device, backBuffer.BackBufferTexture);
 
 			CreateDepthBuffer(newWidth, newHeight);
-
+			
 			ViewPort = new Viewport(0, 0, newWidth, newHeight, 0.0f, 1.0f);
 
 			SetViewPort(ViewPort);
@@ -220,23 +226,7 @@ namespace LeaFramework.Graphics
 			nativeDevice.D3D11Device.ImmediateContext1.Dispatch(x, y, z);
 		}
 
-		//public void SetRenderTarget(RenderTarget2D renderTarget)
-		//{
-		//	var renderTargetViewPort = new Viewport(0, 0, renderTarget.Width, renderTarget.Height);
-			
-		//	SetViewPort(renderTargetViewPort);
-
-		//	nativeDevice.D3D11Device.ImmediateContext1.OutputMerger.SetRenderTargets(renderTarget.RenderTargetTextureView);
-		//	nativeDevice.D3D11Device.ImmediateContext1.ClearRenderTargetView(renderTarget.RenderTargetTextureView, Color.Violet);
-		//}
-
-		//public void RestoreRenderTarget()
-		//{
-		//	ResetTargets();
-		//	nativeDevice.D3D11Device.ImmediateContext1.OutputMerger.SetRenderTargets(renderTargetView);
-			
-		//	SetViewPort(ViewPort);
-		//}
+		
 
 		public void SetblendState(BlendState blendState)
 		{
@@ -259,10 +249,10 @@ namespace LeaFramework.Graphics
 
 		public void IsDepthEnable(bool isDepthTesting)
 		{
-			if(isDepthTesting)
-				nativeDevice.D3D11Device.ImmediateContext1.OutputMerger.SetRenderTargets(depthBuffer.DepthStencilView, renderTargetView);
+			if (isDepthTesting)
+				nativeDevice.D3D11Device.ImmediateContext1.OutputMerger.DepthStencilState = depthStateEnable.DepthStencilState;
 			else
-				nativeDevice.D3D11Device.ImmediateContext1.OutputMerger.SetRenderTargets(renderTargetView);
+				nativeDevice.D3D11Device.ImmediateContext1.OutputMerger.DepthStencilState = depthStateDisable.DepthStencilState;
 		}
 
 

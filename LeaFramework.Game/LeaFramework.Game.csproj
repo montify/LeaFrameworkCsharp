@@ -114,17 +114,17 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="SpriteBatch\FontShaders\geometryShaderFont.hlsl">
+    <None Include="SpriteBatch\SpriteBatchShaders\geometryShaderFont.hlsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="SpriteBatch\FontShaders\pixelShaderFont.hlsl">
+    <None Include="SpriteBatch\SpriteBatchShaders\pixelShaderFont.hlsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="SpriteBatch\FontShaders\vertexShaderFont.hlsl">
+    <None Include="SpriteBatch\SpriteBatchShaders\vertexShaderFont.hlsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

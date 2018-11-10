@@ -72,6 +72,7 @@
     <Compile Include="BufferBase.cs" />
     <Compile Include="ConstantBuffer.cs" />
     <Compile Include="DepthBuffer.cs" />
+    <Compile Include="LeaDepthStencilState.cs" />
     <Compile Include="LeaSamplerState.cs" />
     <Compile Include="NativeDevice.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

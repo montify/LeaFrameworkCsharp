@@ -12,10 +12,6 @@ struct PS_IN
 
 float4 PSMain(PS_IN input) : SV_Target
 {
-    float4 finalColor;
 
-   
-      finalColor = tex.Sample(samp, input.UVCoordinate) * input.Color;
-    
-    return finalColor;
+    return tex.Sample(samp, input.UVCoordinate) * input.Color;
 }
