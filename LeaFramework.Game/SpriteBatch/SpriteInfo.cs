@@ -12,6 +12,6 @@ namespace LeaFramework.Game.SpriteBatch
 		public Vector2 offset;
 		public int textureID;
 		public bool isFont;
-
+		
 	}
 }

@@ -1,4 +1,8 @@
-﻿using LeaFramework.Graphics;
+﻿// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+
+using LeaFramework.Graphics;
 using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D11;
@@ -43,6 +47,7 @@ namespace LeaFramework.Effect
 		public void Dispose()
 		{
 			Utilities.Dispose(ref computeShader);
+			Utilities.Dispose(ref shaderByteCode);
 		}
 
 	}

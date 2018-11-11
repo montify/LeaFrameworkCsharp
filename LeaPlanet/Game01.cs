@@ -26,11 +26,12 @@ namespace LeaFramework.PlayGround
 	
 		SpriteFont sf;
 		EComputeShader computeShader;
-		GuiManager gManager;
+		//GuiManager gManager;
 
 		private bool dirRight = true;
 		public float speed = 2.0f;
 		string t;
+		bool test = true;
 
 		public Game01()
 		{
@@ -59,17 +60,17 @@ namespace LeaFramework.PlayGround
 
 			texture = ContentManager.Instance.Load<LeaTexture2D>(GraphicsDevice, "Content//button.png");
 
-			gManager = new GuiManager(GraphicsDevice, sf);
+			//gManager = new GuiManager(GraphicsDevice, sf);
 
 			Button b = new Button("Button", new Vector2(130, 40), new Vector2(200, 100), texture, false, GraphicsDevice);
 			Button b1 = new Button("Button", new Vector2(130, 40), new Vector2(200, 150), texture, false, GraphicsDevice);
 			Button b2 = new Button("A * -", new Vector2(130, 40), new Vector2(200, 200), texture, false, GraphicsDevice);
 			Button b3 = new Button("Button", new Vector2(130, 40), new Vector2(200, 250), texture, false, GraphicsDevice);
 		
-			gManager.AddWidget(b);
-			gManager.AddWidget(b1);
-			gManager.AddWidget(b2);
-			gManager.AddWidget(b3);
+			//gManager.AddWidget(b);
+			//gManager.AddWidget(b1);
+			//gManager.AddWidget(b2);
+			//gManager.AddWidget(b3);
 
 
 			Task.Factory.StartNew(() =>
@@ -101,13 +102,13 @@ namespace LeaFramework.PlayGround
 		
 		public override void Update(GameTimer gameTime)
 		{
-			gManager.Update();
-			triangle.Update(gameTime, new Vector3(-3, 1, 0));
+			//gManager.Update();
+			//triangle.Update(gameTime, new Vector3(-3, 1, 0));
 
-			if (InputManager.Instance.IsKeyDown(Key.A))
-				gManager.IsVisible = false;
-			else
-				gManager.IsVisible = true;
+			//if (InputManager.Instance.IsKeyDown(Key.A))
+			//	gManager.IsVisible = false;
+			//else
+			//	gManager.IsVisible = true;
 
 		}
 
@@ -160,28 +161,33 @@ namespace LeaFramework.PlayGround
 		
 			GraphicsDevice.SetRasterizerState(rs);
 
-				spriteBatch.Begin(scale, SortMode.Immediate);
+			spriteBatch.Begin(scale, SortMode.Immediate);
 
-			spriteBatch.SubmitString(sf, 
+			spriteBatch.Submit(texture, new Vector2(100, 100), new Vector2(100, 100), Color.White);
+			
+			spriteBatch.SubmitString(sf,
 				"Purple Haze all in my brain |n lately things don't seem the same, |n |n actin' funny but I don't know why |n 'scuse me while I kiss the sky." +
 				"Purple Haze all in my brain |n lately things don't seem the same, |n |n actin' funny but I don't know why |n |n'scuse me while I kiss the sky." +
 				"Purple Haze all in my brain |n lately things don't seem the same, |n |n actin' funny but I don't know why |n |n 'scuse me while I kiss the sky." +
 				"|n + / * - , 0 1234 567890",
 				new Vector2(400, 200), Color.ForestGreen);
 
+			////spriteBatch.SubmitString(sf, "TEST", new Vector2(200, 200), Color.Whbi);
 
-				spriteBatch.SubmitString(sf, "int main(string[] args...) |n { |n   " +  CurrentFps +"|n };", new Vector2(600,50), Color.Peru);
+			spriteBatch.SubmitString(sf, "int main(string[] args...) |n { |n   " +  CurrentFps +"|n };", new Vector2(600,50), Color.Peru);
+			///
+			//spriteBatch.SubmitString(sf, CurrentFps.ToString(), new Vector2(200, 200), Color.White);
 
-				spriteBatch.End();
-
-
-			
-			triangle.Render(Color.White.ToVector3());
-
-		
+			spriteBatch.End();
 
 
-			gManager.Draw(scale);
+
+			//triangle.Render(Color.White.ToVector3());
+
+
+
+
+			//gManager.Draw(scale);
 		}
 
 	}

@@ -1,4 +1,7 @@
-﻿using System;
+﻿// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 
@@ -10,10 +13,8 @@ namespace LeaFramework.Graphics
 {
 	public class LeaTexture2D : TextureBase, IDisposable
 	{
-		internal Texture2DDescription desc;
 		private Texture2D texture;
 
-		
 
 		private LeaTexture2D(GraphicsDevice graphicsDevice, Image image)
 		{
@@ -55,6 +56,7 @@ namespace LeaFramework.Graphics
 		{
 			Utilities.Dispose(ref texture);
 			Utilities.Dispose(ref shaderResourceView);
+
 		}
 	}
 }

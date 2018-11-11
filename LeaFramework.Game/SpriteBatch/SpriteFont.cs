@@ -1,4 +1,9 @@
-﻿using LeaFramework.Graphics;
+﻿// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+
+
+using LeaFramework.Graphics;
 using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
@@ -13,13 +18,13 @@ using System.Threading.Tasks;
 
 namespace LeaFramework.Game.SpriteBatch
 {
-	public class SpriteFont
+	public class SpriteFont : IDisposable
 	{
 		public const int TextureAtlasWidthHeight = 512;
 		private readonly GraphicsDevice graphicsDevice;
 		public Bitmap TextureAtlas;
 		private Library library = new Library();
-		public readonly Dictionary<char, GlyphInfo> glyphList = new Dictionary<char, GlyphInfo>(sizeof(char));
+		public readonly Dictionary<char, GlyphInfo> glyphList = new Dictionary<char, GlyphInfo>(256);
 		public ShaderResourceView textureAtlasSRV;
 
 		public SpriteFont(GraphicsDevice graphicsDevice, string fontName, int fontSize)
@@ -29,11 +34,12 @@ namespace LeaFramework.Game.SpriteBatch
 			
 			var collectedGlyphBitmaps = CollectGlyphs(fontName, fontSize);
 
+			
 			CreateTextureAtlas(collectedGlyphBitmaps);
 
 			CreateTexture2D();
-
-		//	TextureAtlas.Save("Hegh.bmp", ImageFormat.Bmp);
+			library.Dispose();
+			//	TextureAtlas.Save("Hegh.bmp", ImageFormat.Bmp);
 		}
 
 		private Dictionary<char, GlyphSlot> CollectGlyphs(string fontName, int fontSize)
@@ -161,5 +167,21 @@ namespace LeaFramework.Game.SpriteBatch
 			return currentPos;
 		}
 
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				
+			}
+			Utilities.Dispose(ref textureAtlasSRV);
+
+		}
 	}
 }

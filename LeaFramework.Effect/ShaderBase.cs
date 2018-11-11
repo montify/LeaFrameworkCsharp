@@ -1,4 +1,8 @@
-﻿using System;
+﻿// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+
+using System;
 using System.Collections.Generic;
 using LeaFramework.Graphics;
 using SharpDX;
@@ -85,7 +89,7 @@ namespace LeaFramework.Effect
 
 
 		public void SetTexture(ShaderResourceView srv, int slot, ShaderType shaderType)
-		{
+		{ 
 				switch (shaderType)
 				{
 					case ShaderType.VertexShader:
@@ -159,16 +163,24 @@ namespace LeaFramework.Effect
 		public void Dispose()
 		{
 
-			foreach (var effectConstantBuffer in constantBuffers)
-			{
-				effectConstantBuffer.Value.Dispose();
-			}
 
+			Dispose(true);
+			
+			CleanUp();
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				foreach (var effectConstantBuffer in constantBuffers)
+				{
+					effectConstantBuffer.Value.Dispose();
+				}
+			}
 			Utilities.Dispose(ref shaderByteCode);
 			Utilities.Dispose(ref shaderReflection);
-			
 
-			CleanUp();
 		}
 	}
 }

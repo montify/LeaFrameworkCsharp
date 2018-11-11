@@ -1,4 +1,7 @@
-﻿using System.Diagnostics;
+﻿// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+using System.Diagnostics;
 
 namespace LeaFramework.Game
 {
@@ -17,7 +20,7 @@ namespace LeaFramework.Game
 
 		public GameTimer()
 		{
-			_secondsPerCount = 0.0;
+			
 			_deltaTime = -1.0;
 			baseTime = 0;
 			pausedTime = 0;
