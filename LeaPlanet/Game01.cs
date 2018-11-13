@@ -23,7 +23,7 @@ namespace LeaFramework.PlayGround
 		LeaTexture2D texture;
 		private float x, y = 10;
 		float xPos;
-	
+
 		SpriteFont sf;
 		EComputeShader computeShader;
 		//GuiManager gManager;
@@ -31,29 +31,28 @@ namespace LeaFramework.PlayGround
 		private bool dirRight = true;
 		public float speed = 2.0f;
 		string t;
-		bool test = true;
+
 
 		public Game01()
 		{
 			WindowTitle = "Framework ALEX 0.01";
 			IsVSyncEnable = false;
-			
+
 			WindowWidth = 1280;
 			WindowHeight = 720;
-			
+
 			base.Init();
 		}
 
 		public override void Load()
 		{
-			
 			sf = new SpriteFont(GraphicsDevice, "orange.ttf", 30);
-			
+
 			computeShader = new EComputeShader(GraphicsDevice);
 			computeShader.Load("Content//computeShaderTest.hlsl");
 
 			triangle = new Triangle(GraphicsDevice);
-			
+
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 
 			Vector3[] test = { new Vector3(1, 1, 1), new Vector3(2, 2, 2) };
@@ -66,17 +65,18 @@ namespace LeaFramework.PlayGround
 			Button b1 = new Button("Button", new Vector2(130, 40), new Vector2(200, 150), texture, false, GraphicsDevice);
 			Button b2 = new Button("A * -", new Vector2(130, 40), new Vector2(200, 200), texture, false, GraphicsDevice);
 			Button b3 = new Button("Button", new Vector2(130, 40), new Vector2(200, 250), texture, false, GraphicsDevice);
-		
+
 			//gManager.AddWidget(b);
 			//gManager.AddWidget(b1);
 			//gManager.AddWidget(b2);
 			//gManager.AddWidget(b3);
 
 
-			Task.Factory.StartNew(() =>
-			{
-				InputManager.Instance.Listen(RenderForm);
-			});
+			var inputThreadHandle = Task.Factory.StartNew(() =>
+				{
+					InputManager.Instance.Listen(RenderForm);
+				});
+
 			
 			var desc = new RasterizerStateDescription1
 			{
@@ -116,7 +116,6 @@ namespace LeaFramework.PlayGround
 		{
 			GraphicsDevice.Clear(ClearFlags.RenderTarget | ClearFlags.DepthBuffer, new Color(37,37,38));
 
-			
 
 			#region Input
 			float screenscaleW = (float)GraphicsDevice.ViewPort.Width / 1280;
@@ -157,34 +156,26 @@ namespace LeaFramework.PlayGround
 			//}
 			#endregion
 
-
 		
 			GraphicsDevice.SetRasterizerState(rs);
 
-			spriteBatch.Begin(scale, SortMode.Immediate);
+			spriteBatch.Begin(Matrix.Identity, SortMode.Immediate);
 
 			spriteBatch.Submit(texture, new Vector2(100, 100), new Vector2(100, 100), Color.White);
-			
+			spriteBatch.Submit(texture, new Vector2(250, 100), new Vector2(100, 100), Color.White);
+			//spriteBatch.Submit(texture, new Vector2(400, 100), new Vector2(100, 100), Color.White);
+			//spriteBatch.Submit(texture, new Vector2(550, 100), new Vector2(100, 100), Color.White);
+
 			spriteBatch.SubmitString(sf,
-				"Purple Haze all in my brain |n lately things don't seem the same, |n |n actin' funny but I don't know why |n 'scuse me while I kiss the sky." +
-				"Purple Haze all in my brain |n lately things don't seem the same, |n |n actin' funny but I don't know why |n |n'scuse me while I kiss the sky." +
-				"Purple Haze all in my brain |n lately things don't seem the same, |n |n actin' funny but I don't know why |n |n 'scuse me while I kiss the sky." +
-				"|n + / * - , 0 1234 567890",
+				"Purple Haze all in my brain \n lately things don't seem the same, \n \n actin' funny but I don't know why \n \n 'scuse me while I kiss the sky." +
+				"Purple Haze all in my brain \n lately things don't seem the same, \n \n actin' funny but I don't know why \n \n 'scuse me while I kiss the sky." +
+				"Purple Haze all in my brain \n lately things don't seem the same, \n \n actin' funny but I don't know why \n \n'scuse me while I kiss the sky." +
+				"\n + / * - , 0 1234 567890",
 				new Vector2(400, 200), Color.ForestGreen);
-
-			////spriteBatch.SubmitString(sf, "TEST", new Vector2(200, 200), Color.Whbi);
-
-			spriteBatch.SubmitString(sf, "int main(string[] args...) |n { |n   " +  CurrentFps +"|n };", new Vector2(600,50), Color.Peru);
-			///
-			//spriteBatch.SubmitString(sf, CurrentFps.ToString(), new Vector2(200, 200), Color.White);
+			spriteBatch.SubmitString(sf, CurrentFps.ToString(), new Vector2(100, 100), Color.White);
+		
 
 			spriteBatch.End();
-
-
-
-			//triangle.Render(Color.White.ToVector3());
-
-
 
 
 			//gManager.Draw(scale);

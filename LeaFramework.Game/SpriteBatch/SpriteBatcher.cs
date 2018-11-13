@@ -2,10 +2,12 @@
 using LeaFramework.Game.Properties;
 using LeaFramework.Graphics;
 using LeaFramework.Graphics.VertexStructs;
+using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using System;
 using System.Collections.Generic;
+
 using System.Linq;
 
 
@@ -23,16 +25,19 @@ namespace LeaFramework.Game.SpriteBatch
 		private readonly VertexBuffer vertexBuffer;
 		private readonly LeaSamplerState sampler;
 		private LeaEffect effect;
-	
+		private Matrix MVP;
 		private BlendState bs, bs1;
+	
+
 
 		public SpriteBatcher(GraphicsDevice graphicsDevice, int maxBatchSize)
 		{
 			this.graphicsDevice = graphicsDevice;
 			this.maxBatchSize = maxBatchSize;
+
 			fontVertex = new FontVertex[maxBatchSize];
-			
 			spriteList = new List<SpriteInfo>(maxBatchSize);
+
 			renderBatches = new List<RenderBatchInfo>();
 
 			vertexBuffer = new VertexBuffer(graphicsDevice, BufferType.Dynamic);
@@ -93,15 +98,31 @@ namespace LeaFramework.Game.SpriteBatch
 			
 		}
 
+	
+	
 		public void PrepareForRendering()
 		{
+			MVP = Matrix.OrthoOffCenterLH(0, graphicsDevice.ViewPort.Width, graphicsDevice.ViewPort.Height, 0, 0, 1);
+			MVP = Matrix.Transpose(Matrix.Identity * MVP);
+
 			spriteList.Clear();
 			renderBatches.Clear();
 		}
 
+
 		public void AddSpriteInfo(SpriteInfo spriteInfo)
 		{
 			spriteList.Add(spriteInfo);
+
+			if (spriteList.Count >= maxBatchSize)
+			{
+				Draw();
+				PrepareForRendering();
+			
+				//Array.Clear(fontVertex, 0, fontVertex.Length);
+			}
+
+			
 		}
 
 		private void CreateRenderBatches()
@@ -132,7 +153,7 @@ namespace LeaFramework.Game.SpriteBatch
 			vertexBuffer.UpdateBuffer(fontVertex, 0);
 		}
 
-		private void DrawBatches(SharpDX.Matrix MVP)
+		private void DrawBatches(Matrix MVP)
 		{
 			graphicsDevice.SetTopology(PrimitiveTopology.PointList);
 
@@ -142,7 +163,6 @@ namespace LeaFramework.Game.SpriteBatch
 			graphicsDevice.SetVertexBuffer(vertexBuffer);
 
 			effect.SetVariable("ProjMatrix", "perFrame", MVP, ShaderType.GeometryShader);
-
 
 			foreach (var rb in renderBatches)
 			{
@@ -157,10 +177,14 @@ namespace LeaFramework.Game.SpriteBatch
 			graphicsDevice.IsDepthEnable(true);
 		}
 
-		public void Draw(SharpDX.Matrix MVP)
+		public void Draw()
 		{
-			CreateRenderBatches();
-			DrawBatches(MVP);
+			if(spriteList.Count > 0)
+			{
+				CreateRenderBatches();
+				DrawBatches(MVP);
+			}
+			
 		}
 
 		public void Dispose()

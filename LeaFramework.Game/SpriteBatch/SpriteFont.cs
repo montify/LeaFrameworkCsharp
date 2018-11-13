@@ -42,19 +42,18 @@ namespace LeaFramework.Game.SpriteBatch
 			//	TextureAtlas.Save("Hegh.bmp", ImageFormat.Bmp);
 		}
 
-		private Dictionary<char, GlyphSlot> CollectGlyphs(string fontName, int fontSize)
+		private Dictionary<char, GlyphSlot> CollectGlyphs(string fontPath, int fontSize)
 		{
 			var glyphBitmapList = new Dictionary<char, GlyphSlot>();
 
 			for (int i = 0; i < 128; i++)
 			{
-				var face = new Face(library, fontName);
+				var face = new Face(library, fontPath);
 				face.SetCharSize(0, fontSize, 72, 72);
 
-				var x = face.GetCharIndex((char)i);
-				face.LoadGlyph(x, LoadFlags.Render, LoadTarget.Normal);
+				face.LoadChar((char)i, LoadFlags.Render, LoadTarget.Normal);
 				face.Glyph.RenderGlyph(RenderMode.Normal);
-
+				
 				glyphBitmapList.Add((char)i, face.Glyph);
 			}
 
@@ -160,19 +159,17 @@ namespace LeaFramework.Game.SpriteBatch
 					currentPos.X += character.metrics.HorizontalAdvance.ToInt32();
 				}
 
-				
-				
 			}
 
 			return currentPos;
 		}
+
 
 		public void Dispose()
 		{
 			Dispose(true);
 			GC.SuppressFinalize(this);
 		}
-
 
 		protected virtual void Dispose(bool disposing)
 		{

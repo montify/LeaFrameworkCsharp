@@ -48,6 +48,8 @@ namespace LeaFramework.Input
 			return keyList[(int)key];
 		}
 
+		
+
 		public static InputManager Instance
 		{
 			get
