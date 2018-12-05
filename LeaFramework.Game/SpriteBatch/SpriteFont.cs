@@ -24,8 +24,13 @@ namespace LeaFramework.Game.SpriteBatch
 		private readonly GraphicsDevice graphicsDevice;
 		public Bitmap TextureAtlas;
 		private Library library = new Library();
-		public readonly Dictionary<char, GlyphInfo> glyphList = new Dictionary<char, GlyphInfo>(256);
+		public readonly Dictionary<char, GlyphInfo> glyphList = new Dictionary<char, GlyphInfo>(128);
 		public ShaderResourceView textureAtlasSRV;
+
+		/// <summary>
+		/// Describe the spacing between newLine
+		/// </summary>
+		public float LineHight { get; private set; }
 
 		public SpriteFont(GraphicsDevice graphicsDevice, string fontName, int fontSize)
 		{
@@ -34,8 +39,18 @@ namespace LeaFramework.Game.SpriteBatch
 			
 			var collectedGlyphBitmaps = CollectGlyphs(fontName, fontSize);
 
-			
+		
 			CreateTextureAtlas(collectedGlyphBitmaps);
+
+			
+			//foreach (var item in glyphList)
+			//{
+			
+			//	//if (item.Value.metrics.Height.ToSingle() > HighestGlypghYValue)
+			//	//	HighestGlypghYValue = item.Value.metrics.Height.ToSingle();
+
+			
+			//}
 
 			CreateTexture2D();
 			library.Dispose();
@@ -45,12 +60,15 @@ namespace LeaFramework.Game.SpriteBatch
 		private Dictionary<char, GlyphSlot> CollectGlyphs(string fontPath, int fontSize)
 		{
 			var glyphBitmapList = new Dictionary<char, GlyphSlot>();
-
+			
+			
 			for (int i = 0; i < 128; i++)
 			{
 				var face = new Face(library, fontPath);
+				
 				face.SetCharSize(0, fontSize, 72, 72);
-
+				LineHight = face.Size.Metrics.Height.ToInt32();
+				
 				face.LoadChar((char)i, LoadFlags.Render, LoadTarget.Normal);
 				face.Glyph.RenderGlyph(RenderMode.Normal);
 				
@@ -83,8 +101,8 @@ namespace LeaFramework.Game.SpriteBatch
 				}
 
 
-				glyphList.Add(glyph.Key,
-					new GlyphInfo(currentGlyph.Metrics, new Vector2(offsetX, offsetY)));
+				glyphList.Add(glyph.Key, new GlyphInfo(currentGlyph.Metrics, new Vector2(offsetX, offsetY)));
+
 
 				//IF roughly reach the Bitmap border, make a new Line
 				if (offsetX + currentGlyph.Metrics.Width >= TextureAtlasWidthHeight - 100)

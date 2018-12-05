@@ -60,7 +60,7 @@ namespace PlayGround
 				0, 1, 2
 			};
 		
-			vertexBuffer = new VertexBuffer(graphicsDevice, BufferType.Normal);
+			vertexBuffer = new VertexBuffer(graphicsDevice, BufferUsage.Normal);
 			vertexBuffer.SetData(vertices);
 
 

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Diagnostics;
+using System.Threading.Tasks;
 using LeaFramework.Content;
 using LeaFramework.Effect;
 using LeaFramework.Game;
@@ -20,7 +21,7 @@ namespace LeaFramework.PlayGround
 		private Triangle triangle;
 		private RasterizerState1 rs;
 		private SpriteBatch spriteBatch;
-		LeaTexture2D texture;
+		LeaTexture2D texture, texture1;
 		private float x, y = 10;
 		float xPos;
 
@@ -31,7 +32,9 @@ namespace LeaFramework.PlayGround
 		private bool dirRight = true;
 		public float speed = 2.0f;
 		string t;
+		int aasd;
 
+		Stopwatch sw = new Stopwatch();
 
 		public Game01()
 		{
@@ -46,19 +49,19 @@ namespace LeaFramework.PlayGround
 
 		public override void Load()
 		{
-			sf = new SpriteFont(GraphicsDevice, "orange.ttf", 30);
+			sf = new SpriteFont(GraphicsDevice, "OpenSans-Regular.ttf", 30);
 
-			computeShader = new EComputeShader(GraphicsDevice);
-			computeShader.Load("Content//computeShaderTest.hlsl");
+			//computeShader = new EComputeShader(GraphicsDevice);
+			//computeShader.Load("Content//computeShaderTest.hlsl");
 
 			triangle = new Triangle(GraphicsDevice);
 
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 
-			Vector3[] test = { new Vector3(1, 1, 1), new Vector3(2, 2, 2) };
+			
 
-			texture = ContentManager.Instance.Load<LeaTexture2D>(GraphicsDevice, "Content//button.png");
-
+			texture = ContentManager.Instance.Load<LeaTexture2D>(GraphicsDevice, "Content//test.png");
+			texture1 = ContentManager.Instance.Load<LeaTexture2D>(GraphicsDevice, "Content//uvTestTexSmall.png");
 			//gManager = new GuiManager(GraphicsDevice, sf);
 
 			Button b = new Button("Button", new Vector2(130, 40), new Vector2(200, 100), texture, false, GraphicsDevice);
@@ -94,7 +97,7 @@ namespace LeaFramework.PlayGround
 		{
 
 			rs.Dispose();
-			triangle.Dispose();
+			//triangle.Dispose();
 			spriteBatch.Dispose();
 		
 			ContentManager.Instance.Dispose();
@@ -103,82 +106,42 @@ namespace LeaFramework.PlayGround
 		public override void Update(GameTimer gameTime)
 		{
 			//gManager.Update();
-			//triangle.Update(gameTime, new Vector3(-3, 1, 0));
+			//triangle.Update(gameTime, new Vector3(-4, 1, 0));
 
 			//if (InputManager.Instance.IsKeyDown(Key.A))
 			//	gManager.IsVisible = false;
 			//else
 			//	gManager.IsVisible = true;
 
+			//System.Console.WriteLine(InputManager.Instance.GetMousePosition().X);
+
 		}
 
 		public override void Render(GameTimer gameTime)
 		{
-			GraphicsDevice.Clear(ClearFlags.RenderTarget | ClearFlags.DepthBuffer, new Color(37,37,38));
+			GraphicsDevice.Clear(ClearFlags.RenderTarget | ClearFlags.DepthBuffer, Color.CornflowerBlue);
 
 
-			#region Input
 			float screenscaleW = (float)GraphicsDevice.ViewPort.Width / 1280;
 			float screenscaleH = (float)GraphicsDevice.ViewPort.Height / 720;
 			var scale = Matrix.Scaling(screenscaleW, screenscaleH, 1);
 
-			if (InputManager.Instance.IsKeyDown(Key.ESC)) IsRunning = false;
+			
+			spriteBatch.Begin(scale, SortMode.Immediate);
 
-			//if (InputManager.Instance.IsKeyDown(Key.W))
-			//	y -= 300 * gameTime.DeltaTime;
+			//for (float i = 0; i < 1000; i += 25)
+			//	for (float x = 0; x < 1100; x += 25)
+			//	{
+			//		spriteBatch.Submit(texture, new Vector2(i, x), Vector2.Zero, Color.White);
+			//	}
 
-			//if (InputManager.Instance.IsKeyDown(Key.S))
-			//	y += 300 * gameTime.DeltaTime;
-
-			//if (InputManager.Instance.IsKeyDown(Key.A))
-			//	x -= 300 * gameTime.DeltaTime;
-			//if (InputManager.Instance.IsKeyDown(Key.D))
-			//	x += 300 * gameTime.DeltaTime;
-
-
-			//RectangleF player = new RectangleF(x, y, 100, 100);
-			//RectangleF st = new RectangleF(xPos, 300, 100, 100);
-
-
-			//if (dirRight)
-			//	xPos += 400 * gameTime.DeltaTime;
-			//else
-			//	xPos -= 400 * gameTime.DeltaTime;
-
-
-			//if (xPos >= GraphicsDevice.ViewPort.Width-100)
-			//{
-			//	dirRight = false;
-			//}
-			//if (xPos <= 0)
-			//{
-			//	dirRight = true;
-			//}
-			#endregion
-
-		
-			GraphicsDevice.SetRasterizerState(rs);
-
-			spriteBatch.Begin(Matrix.Identity, SortMode.Immediate);
-
-			spriteBatch.Submit(texture, new Vector2(100, 100), new Vector2(100, 100), Color.White);
-			spriteBatch.Submit(texture, new Vector2(250, 100), new Vector2(100, 100), Color.White);
-			//spriteBatch.Submit(texture, new Vector2(400, 100), new Vector2(100, 100), Color.White);
-			//spriteBatch.Submit(texture, new Vector2(550, 100), new Vector2(100, 100), Color.White);
-
-			spriteBatch.SubmitString(sf,
-				"Purple Haze all in my brain \n lately things don't seem the same, \n \n actin' funny but I don't know why \n \n 'scuse me while I kiss the sky." +
-				"Purple Haze all in my brain \n lately things don't seem the same, \n \n actin' funny but I don't know why \n \n 'scuse me while I kiss the sky." +
-				"Purple Haze all in my brain \n lately things don't seem the same, \n \n actin' funny but I don't know why \n \n'scuse me while I kiss the sky." +
-				"\n + / * - , 0 1234 567890",
-				new Vector2(400, 200), Color.ForestGreen);
-			spriteBatch.SubmitString(sf, CurrentFps.ToString(), new Vector2(100, 100), Color.White);
-		
-
+			spriteBatch.SubmitString(sf, "Althea Told me, i was feeling lost \n Lacking in some Direcktiion\n" +
+										 "Althea Told me, i was feeling lost \n Lacking in some Direcktiion\n" +
+										 "Althea Told me, i was feeling lost \n Lacking in some Direcktiion\n" +
+										 "Althea Told me, i was feeling lost \n Lacking in some Direcktiion  gj GJ ij fh fi",
+										 new Vector2(200, 200), Color.White);
 			spriteBatch.End();
 
-
-			//gManager.Draw(scale);
 		}
 
 	}

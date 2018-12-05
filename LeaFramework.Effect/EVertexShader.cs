@@ -18,6 +18,11 @@ namespace LeaFramework.Effect
 			
 			shaderType = ShaderType.VertexShader;
 
+#if DEBUG
+			base.debugName = debugName;
+#endif
+
+			// if Blob is 0, try to use File instead
 			if (string.IsNullOrEmpty(createInfo.VertexShaderBlob))
 			{
 				shaderByteCode = GetShaderByteCode(createInfo.VertexShaderPath, createInfo.VertexShaderEntryPoint, "vs_5_0");
@@ -29,10 +34,7 @@ namespace LeaFramework.Effect
 
 			shaderReflection = ReflectShaderByteCode();
 
-#if DEBUG
-			base.debugName = debugName;
-#endif
-			
+
 			vertexShader = new VertexShader(graphicsDevice.NatiDevice1.D3D11Device, shaderByteCode);
 
 			constantBuffers = ReflectConstantBuffers();

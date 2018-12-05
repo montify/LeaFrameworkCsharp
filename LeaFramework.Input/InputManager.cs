@@ -48,7 +48,10 @@ namespace LeaFramework.Input
 			return keyList[(int)key];
 		}
 
-		
+		public Vector2 GetMousePosition()
+		{
+			return MousePosition;
+		}
 
 		public static InputManager Instance
 		{

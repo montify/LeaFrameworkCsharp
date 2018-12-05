@@ -18,7 +18,7 @@ namespace LeaFramework.Graphics
 			base.graphicsDevice = graphicsDevice;
 			this.Format = format;
 			binfFlags = BindFlags.IndexBuffer;
-			bufferType = BufferType.Normal;
+			bufferType = BufferUsage.Normal;
 #if DEBUG
 			base.debugName = debugName;
 #endif

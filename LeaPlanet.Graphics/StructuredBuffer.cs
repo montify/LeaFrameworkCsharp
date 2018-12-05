@@ -15,7 +15,7 @@ namespace LeaFramework.Graphics
 		public StructuredBuffer(GraphicsDevice graphicsDevice)
 		{
 			base.graphicsDevice = graphicsDevice;
-			bufferType = BufferType.Dynamic;
+			bufferType = BufferUsage.Dynamic;
 		}
 
 		public void Create(int sizeInBytes, int stride)

@@ -17,30 +17,33 @@ namespace LeaFramework.Game.SpriteBatch
 	{
 		private int maxBatchSize;
 
-		public readonly List<SpriteInfo> spriteList;
+		//public  List<SpriteInfo> spriteList;
+		
 		public readonly List<RenderBatchInfo> renderBatches;
-
+		public readonly List<SpriteInfo> spriteList;
 		private readonly GraphicsDevice graphicsDevice;
 		private readonly FontVertex[] fontVertex;
 		private readonly VertexBuffer vertexBuffer;
 		private readonly LeaSamplerState sampler;
 		private LeaEffect effect;
+		public Matrix ScaleMatrix { get; set; }
 		private Matrix MVP;
 		private BlendState bs, bs1;
-	
-
+		private ShaderResourceView oldTexture, currentTexture;
+		bool once;
+		
 
 		public SpriteBatcher(GraphicsDevice graphicsDevice, int maxBatchSize)
 		{
 			this.graphicsDevice = graphicsDevice;
 			this.maxBatchSize = maxBatchSize;
 
+			spriteList = new List<SpriteInfo>();
 			fontVertex = new FontVertex[maxBatchSize];
-			spriteList = new List<SpriteInfo>(maxBatchSize);
-
+		
 			renderBatches = new List<RenderBatchInfo>();
 
-			vertexBuffer = new VertexBuffer(graphicsDevice, BufferType.Dynamic);
+			vertexBuffer = new VertexBuffer(graphicsDevice, BufferUsage.Dynamic);
 			vertexBuffer.SetData(fontVertex);
 
 			sampler = new LeaSamplerState();
@@ -51,7 +54,6 @@ namespace LeaFramework.Game.SpriteBatch
 
 			effect.SetVariable("textureAtlasResWidthHeight", "startUp", 512, ShaderType.GeometryShader);
 			effect.SetSampler(sampler, 0, ShaderType.PixelShader);
-
 		}
 
 		private void CreateEffect()
@@ -98,19 +100,17 @@ namespace LeaFramework.Game.SpriteBatch
 			
 		}
 
-	
-	
+
 		public void PrepareForRendering()
 		{
 			MVP = Matrix.OrthoOffCenterLH(0, graphicsDevice.ViewPort.Width, graphicsDevice.ViewPort.Height, 0, 0, 1);
-			MVP = Matrix.Transpose(Matrix.Identity * MVP);
+			MVP = Matrix.Transpose(ScaleMatrix * MVP);
 
 			spriteList.Clear();
 			renderBatches.Clear();
 		}
 
-
-		public void AddSpriteInfo(SpriteInfo spriteInfo)
+		public void AddSpriteInfo(SpriteInfo spriteInfo, ref int ptr)
 		{
 			spriteList.Add(spriteInfo);
 
@@ -118,73 +118,85 @@ namespace LeaFramework.Game.SpriteBatch
 			{
 				Draw();
 				PrepareForRendering();
-			
-				//Array.Clear(fontVertex, 0, fontVertex.Length);
+				ptr = 0;
 			}
-
-			
 		}
 
 		private void CreateRenderBatches()
 		{
-			if (spriteList.Count == 0)
-				return;
+			//if (spriteList.Count == 0)
+			//	return;
 
+			//spriteList = spriteList.OrderBy(o => o.srv.GetHashCode()).ToList();
 
 			renderBatches.Add(new RenderBatchInfo(spriteList[0].srv, 0, 1));
 
-			fontVertex[0] = new FontVertex(spriteList[0].position, spriteList[0].size, spriteList[0].color, spriteList[0].offset, spriteList[0].isFont);
+			fontVertex[0] = new FontVertex(spriteList[0].position, spriteList[0].size, spriteList[0].color, spriteList[0].offset);
 
-			int offset = 0;
-
-			offset++;
+			int offset = 1;
 
 			for (int i = 1; i < spriteList.Count; i++)
 			{
-				if (spriteList[i].textureID != spriteList[i - 1].textureID)
-					renderBatches.Add(new RenderBatchInfo(spriteList[i].srv, offset, 1));
+				if (spriteList[i].srv == null)
+					break;
+
+				var currentSprite = spriteList[i];
+
+				if (currentSprite.textureHashCode != spriteList[i - 1].textureHashCode)
+					renderBatches.Add(new RenderBatchInfo(currentSprite.srv, offset, 1));
 				else
 					renderBatches.Last().numVertices += 1;
-
-				fontVertex[i] = new FontVertex(spriteList[i].position, spriteList[i].size, spriteList[i].color, spriteList[i].offset, spriteList[i].isFont);
+				
+				fontVertex[i].Position = currentSprite.position;
+				fontVertex[i].Size = currentSprite.size;
+				fontVertex[i].Color = currentSprite.color;
+				fontVertex[i].Offset = currentSprite.offset;
+				
 				offset++;
 			}
-
-			vertexBuffer.UpdateBuffer(fontVertex, 0);
+				vertexBuffer.UpdateBuffer(fontVertex, 0);
 		}
 
-		private void DrawBatches(Matrix MVP)
+		private void DrawBatches()
 		{
-			graphicsDevice.SetTopology(PrimitiveTopology.PointList);
-
-			graphicsDevice.IsDepthEnable(false);
-			graphicsDevice.SetblendState(bs);
-
-			graphicsDevice.SetVertexBuffer(vertexBuffer);
-
-			effect.SetVariable("ProjMatrix", "perFrame", MVP, ShaderType.GeometryShader);
 
 			foreach (var rb in renderBatches)
 			{
-				effect.SetTexture(rb.texture, 0, ShaderType.PixelShader);
-
+				if(rb.texture != currentTexture)
+				{
+					effect.SetTexture(rb.texture, 0, ShaderType.PixelShader);
+					currentTexture = rb.texture;
+				}
+							
 				effect.Apply();
 				graphicsDevice.Draw(rb.numVertices, rb.offset);
+				
 			}
-
-
-			graphicsDevice.SetblendState(bs1);
-			graphicsDevice.IsDepthEnable(true);
 		}
 
 		public void Draw()
 		{
-			if(spriteList.Count > 0)
+			if (spriteList.Count > 0)
 			{
 				CreateRenderBatches();
-				DrawBatches(MVP);
+				DrawBatches();				
 			}
-			
+		}
+
+		public void InternalBegin()
+		{
+			graphicsDevice.SetTopology(PrimitiveTopology.PointList);
+			effect.SetVariable("ProjMatrix", "perFrame", MVP, ShaderType.GeometryShader);
+		
+			graphicsDevice.IsDepthEnable(false);
+			graphicsDevice.SetblendState(bs);
+			graphicsDevice.SetVertexBuffer(vertexBuffer);
+		}
+
+		public void End()
+		{
+			graphicsDevice.SetblendState(bs1);
+			graphicsDevice.IsDepthEnable(true);
 		}
 
 		public void Dispose()

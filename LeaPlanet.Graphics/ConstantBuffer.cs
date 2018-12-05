@@ -12,7 +12,7 @@ namespace LeaFramework.Graphics
 		public ConstantBuffer(GraphicsDevice graphicsDevice)
 		{
 			base.graphicsDevice = graphicsDevice;
-			base.bufferType = BufferType.Dynamic;
+			base.bufferType = BufferUsage.Dynamic;
 			base.binfFlags = BindFlags.ConstantBuffer;
 		}
 

@@ -1,17 +1,16 @@
 ﻿using SharpDX;
 using SharpDX.Direct3D11;
-
+using System.Runtime.InteropServices;
 namespace LeaFramework.Game.SpriteBatch
 {
-	public struct SpriteInfo
+
+	public class SpriteInfo
 	{
 		public Vector2 position;
 		public Vector2 size;
 		public Vector4 color;
-		public ShaderResourceView srv;
 		public Vector2 offset;
-		public int textureID;
-		public bool isFont;
-		
+		public ShaderResourceView srv;
+		public int textureHashCode;
 	}
 }

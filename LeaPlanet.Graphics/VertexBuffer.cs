@@ -4,6 +4,7 @@
 using SharpDX;
 using SharpDX.Direct3D11;
 using System;
+using System.Runtime.InteropServices;
 using Buffer = SharpDX.Direct3D11.Buffer;
 
 namespace LeaFramework.Graphics
@@ -12,7 +13,7 @@ namespace LeaFramework.Graphics
 	{
 		public VertexBufferBinding VertexBufferBinding { get; private set; }
 	
-		public VertexBuffer(GraphicsDevice graphicsDevice, BufferType bufferType)
+		public VertexBuffer(GraphicsDevice graphicsDevice, BufferUsage bufferType)
 		{
 			base.bufferType = bufferType;
 			base.graphicsDevice = graphicsDevice;
@@ -22,8 +23,9 @@ namespace LeaFramework.Graphics
 		public void SetData<T>(T[] vertices) where T : struct
 		{
 			base.SizeInBytes = Utilities.SizeOf(vertices);
+		
 
-			if (bufferType == BufferType.Normal)
+			if (bufferType == BufferUsage.Normal)
 			{
 				buffer = Buffer.Create(graphicsDevice.NatiDevice1.D3D11Device, binfFlags, vertices);
 			}

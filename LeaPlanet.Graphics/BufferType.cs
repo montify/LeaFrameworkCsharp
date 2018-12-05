@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LeaFramework.Graphics
 {
-	public enum BufferType
+	public enum BufferUsage
 	{
 		Normal,
 		Dynamic

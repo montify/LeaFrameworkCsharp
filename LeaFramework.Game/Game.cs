@@ -3,6 +3,7 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
 using LeaFramework.Game;
 using LeaFramework.Graphics;
 using SharpDX;
@@ -17,20 +18,21 @@ namespace LeaPlanet.src
 		private RenderForm renderForm;
 		private GraphicsDevice graphicsDevice;
 		private bool isResize;
-		
+
 		private readonly GameTimer timer = new GameTimer();
 		private int frameCount;
 		private float timeElapsed;
 
 		public GraphicsDevice GraphicsDevice => graphicsDevice;
-		
+
 		public string WindowTitle { get; set; }
-		public int WindowWidth{ get; set; }
+		public int WindowWidth { get; set; }
 		public int WindowHeight { get; set; }
 		public bool IsVSyncEnable;
 
 		public float CurrentFps { get; private set; }
-
+		public float AverageFrame { get; private set; }
+		private List<float> frameCaputerList = new List<float>();
 		public bool IsRunning { get; set; }
 
 		protected Game()
@@ -64,9 +66,28 @@ namespace LeaPlanet.src
 			if (!(timer.TotalTime - timeElapsed >= 1.0f))
 				return;
 
-			 CurrentFps = (float)frameCount;
+			CurrentFps = frameCount;
 			var mspf = 1000.0f / CurrentFps;
-			var s = WindowTitle + $" | FPS: {CurrentFps} Frame Time: {mspf} (ms)";
+			var s = WindowTitle + $" | FPS: {CurrentFps}  | AverageFrame:  { AverageFrame }  | Frame Time: {mspf} (ms)";
+
+			frameCaputerList.Add(CurrentFps);
+
+			if (frameCaputerList.Count == 10)
+			{
+				frameCaputerList.Clear();
+			}
+
+			float tmp = 0;
+
+			for (int i = 0; i < frameCaputerList.Count; i++)
+			{
+				 tmp += frameCaputerList[i];
+
+				 AverageFrame = tmp / frameCaputerList.Count;
+			}
+
+				
+			
 
 			RenderForm.Text = s;
 
