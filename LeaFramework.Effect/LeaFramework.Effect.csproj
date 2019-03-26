@@ -66,6 +66,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ComputeShaderHelper.cs" />
     <Compile Include="ConstantBufferVariable.cs" />
     <Compile Include="EComputeShader.cs" />
     <Compile Include="EConstantBuffer.cs" />

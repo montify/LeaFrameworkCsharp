@@ -49,7 +49,6 @@ namespace PlayGround
 			vertices[1].Position = new Vector3(0.0f, 1.0f, 1.0f);
 			vertices[2].Position = new Vector3(-1.0f, -1.0f, 1.0f);
 		
-
 			vertices[0].Color = Color.Orange.ToVector4();
 			vertices[1].Color = Color.Orange.ToVector4();
 			vertices[2].Color = Color.Orange.ToVector4();
@@ -63,11 +62,8 @@ namespace PlayGround
 			vertexBuffer = new VertexBuffer(graphicsDevice, BufferUsage.Normal);
 			vertexBuffer.SetData(vertices);
 
-
 			indexBuffer = new IndexBuffer(graphicsDevice, Format.R32_UInt, "XDTT");
 			indexBuffer.SetData(indices);
-
-			
 		}
 
 		public void Update(GameTimer gameTime, Vector3 position)

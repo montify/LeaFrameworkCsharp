@@ -31,20 +31,15 @@ namespace LeaFramework.Graphics
 				MipLevels = 1,
 				Width = width,
 				Height = height,
-				SampleDescription = new SampleDescription(1, 0),
+				SampleDescription = new SampleDescription(4, 0),
 				Usage = ResourceUsage.Default,
 				BindFlags = BindFlags.DepthStencil,
 				CpuAccessFlags = CpuAccessFlags.None,
 				OptionFlags = ResourceOptionFlags.None
 			});
 
-			
-		
 
-
-
-
-			depthStencilView = new DepthStencilView(nativeDevice.D3D11Device, depthBufferTexture);
+            depthStencilView = new DepthStencilView(nativeDevice.D3D11Device, depthBufferTexture);
 			
 		}
 

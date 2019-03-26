@@ -1,7 +1,6 @@
 ﻿cbuffer CC
 {
 	float3 Color;
-	float intense;
 };
 
 struct PS_IN

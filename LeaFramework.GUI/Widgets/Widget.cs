@@ -40,7 +40,7 @@ namespace LeaFramework.GUI.Widgets
 
 			Vector2 Scale = new Vector2(ScaleMatrix.M11, ScaleMatrix.M22);
 
-			var mouseState = InputManager.Instance.MousePosition / Scale;
+			var mouseState = InputManager.MousePosition / Scale;
 
 			var widgetRectangle = new Rectangle((int)partenPosition.X + (int)position.X, (int)partenPosition.Y + (int)position.Y, (int)size.X, (int)size.Y);
 

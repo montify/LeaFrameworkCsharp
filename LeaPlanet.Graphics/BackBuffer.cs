@@ -32,7 +32,7 @@ namespace LeaFramework.Graphics
 				Height = renderForm.ClientSize.Height,
 				Format = Format.R8G8B8A8_UNorm,
 				Stereo = false,
-				SampleDescription = new SampleDescription(1, 0),
+				SampleDescription = new SampleDescription(4, 0),
 				Usage = Usage.RenderTargetOutput,
 				BufferCount = 1,
 				SwapEffect = SwapEffect.Discard,

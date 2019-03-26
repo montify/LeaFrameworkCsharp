@@ -136,7 +136,7 @@ namespace LeaFramework.Game.SpriteBatch
 
 		public void Dispose()
 		{
-			spriteBatcher.Dispose();
+			spriteBatcher?.Dispose();
 			
 		}
 	}

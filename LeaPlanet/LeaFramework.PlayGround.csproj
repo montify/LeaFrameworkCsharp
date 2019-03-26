@@ -40,6 +40,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ParallelExtensionsExtras">
+      <HintPath>..\ThirdPartyLibrarys\ParallelExtensionsExtras.dll</HintPath>
+    </Reference>
     <Reference Include="SharpDX, Version=2.6.3.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ThirdPartyLibrarys\SharpDX\SharpDX.dll</HintPath>
@@ -70,8 +73,18 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Misc\SpaceCam.cs" />
+    <Compile Include="Misc\Vector3Double.cs" />
+    <Compile Include="TerrainSrc\Globals.cs" />
+    <Compile Include="TerrainSrc\IndexBuffers.cs" />
+    <Compile Include="TerrainSrc\QuadMesh.cs" />
+    <Compile Include="TerrainSrc\QuadNode.cs" />
+    <Compile Include="TerrainSrc\QuadNodeExtents.cs" />
+    <Compile Include="TerrainSrc\QuadRenderer.cs" />
+    <Compile Include="TerrainSrc\Terrain.cs" />
     <Compile Include="Triangle.cs" />
     <Compile Include="Game01.cs" />
     <Compile Include="Program.cs" />
@@ -81,28 +94,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\button.png">
+    <Content Include="Content\PlanetShaders\noiseCs.hlsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\computeShaderTest.hlsl">
+    <Content Include="Content\PlanetShaders\pixelShader.hlsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\test.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\TriangleShaders\pixelShader.hlsl">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\TriangleShaders\vertexShader.hlsl">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\tt.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\uvTestTex.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\uvTestTexSmall.png">
+    <Content Include="Content\PlanetShaders\vertexShader.hlsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -132,5 +130,6 @@
       <Name>LeaFramework.Graphics</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

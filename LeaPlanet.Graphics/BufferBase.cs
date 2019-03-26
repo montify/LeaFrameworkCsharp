@@ -21,25 +21,15 @@ namespace LeaFramework.Graphics
 		
 		protected BufferUsage bufferType;
 		public Buffer NativeBuffer => buffer;
-	
-		//public void UpdateBuffer<T>(T[] data, int offset, int count) where T : struct
-		//{
-		//	if (bufferType == BufferUsage.Normal)
-		//		throw new Exception("Buffer is not dynamic!");
 
-		//	graphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.MapSubresource(buffer, MapMode.WriteDiscard, MapFlags.None, out var dataBox);
 
-		//	Utilities.Write(dataBox.DataPointer, data, offset, count);
-
-		//	graphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.UnmapSubresource(buffer, 0);
-		//}
-
-		public unsafe void UpdateBuffer<T>(T[] data, int offset) where T : struct
+        public unsafe void UpdateBuffer<T>(T[] data, int offset) where T : struct
 		{
 			if (bufferType == BufferUsage.Normal)
 				throw new Exception("Buffer is not dynamic!");
 
-			graphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.MapSubresource(buffer, MapMode.WriteDiscard, MapFlags.None, out var dataStream);
+		    DataStream dataStream;
+		    graphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.MapSubresource(buffer, MapMode.WriteDiscard, MapFlags.None, out dataStream);
 			Utilities.Write(dataStream.DataPointer, data, offset, data.Length);
 			graphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.UnmapSubresource(buffer, 0);
 		}

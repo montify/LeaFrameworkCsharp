@@ -55,8 +55,8 @@ namespace LeaPlanet.src
 			graphicsDevice = new GraphicsDevice(RenderForm);
 
 			RenderForm.UserResized += (sender, args) => isResize = true;
-			
-		}
+           
+        }
 
 		private void CalculateFrameRate()
 		{

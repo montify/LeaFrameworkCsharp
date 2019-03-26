@@ -36,7 +36,7 @@ namespace LeaFramework.Graphics
 		private Viewport currentViewport;
 		private BlendState currentBlendState;
 		private RasterizerState currentRsState;
-		private bool isDepthEnabled;
+		//private bool isDepthEnabled;
 
 		public GraphicsDevice(RenderForm renderForm)
 		{
@@ -53,8 +53,8 @@ namespace LeaFramework.Graphics
 			SetViewPort(ViewPort);
 
 			nativeDevice.D3D11Device.ImmediateContext1.OutputMerger.SetRenderTargets(depthBuffer.DepthStencilView, renderTargetView);
-			//nativeDevice.D3D11Device.ImmediateContext1.OutputMerger.SetDepthStencilState(depthStateEnable.DepthStencilState);
-			nativeDevice.D3D11Device.ImmediateContext1.OutputMerger.DepthStencilState = depthStateEnable.DepthStencilState;
+			nativeDevice.D3D11Device.ImmediateContext1.OutputMerger.SetDepthStencilState(depthStateEnable.DepthStencilState);
+		//	nativeDevice.D3D11Device.ImmediateContext1.OutputMerger.DepthStencilState = depthStateEnable.DepthStencilState;
 		}
 
 		private void CreateDeviceAndSwapChain()
