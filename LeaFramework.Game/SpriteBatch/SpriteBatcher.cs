@@ -201,7 +201,12 @@ namespace LeaFramework.Game.SpriteBatch
 
 		public void Dispose()
 		{
-			
+			sampler.Dispose();
+            vertexBuffer.Dispose();
+            oldTexture?.Dispose();
+            currentTexture?.Dispose();
+            bs.Dispose();
+            bs1.Dispose();
 		}
 	}
 }

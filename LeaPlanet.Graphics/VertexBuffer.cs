@@ -17,7 +17,7 @@ namespace LeaFramework.Graphics
 		{
 			base.bufferType = bufferType;
 			base.graphicsDevice = graphicsDevice;
-			binfFlags = BindFlags.VertexBuffer;
+			bindFlags = BindFlags.VertexBuffer;
 		}
 
 		public void SetData<T>(T[] vertices) where T : struct
@@ -27,11 +27,11 @@ namespace LeaFramework.Graphics
 
 			if (bufferType == BufferUsage.Normal)
 			{
-				buffer = Buffer.Create(graphicsDevice.NatiDevice1.D3D11Device, binfFlags, vertices);
+				buffer = Buffer.Create(graphicsDevice.NatiDevice1.D3D11Device, bindFlags, vertices);
 			}
 			else
 			{
-				buffer = Buffer.Create(graphicsDevice.NatiDevice1.D3D11Device, binfFlags, vertices,
+				buffer = Buffer.Create(graphicsDevice.NatiDevice1.D3D11Device, bindFlags, vertices,
 					Utilities.SizeOf(vertices), ResourceUsage.Dynamic,
 					CpuAccessFlags.Write);
 			}

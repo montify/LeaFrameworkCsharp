@@ -27,6 +27,7 @@ namespace LeaFramework.Graphics
 
 			base.Width = rawImage.Width;
 			base.Height = rawImage.Height;
+
 			texture = new Texture2D(graphicsDevice.NatiDevice1.D3D11Device, new Texture2DDescription()
 			{
 				Width = rawImage.Width,

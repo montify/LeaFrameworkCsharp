@@ -17,7 +17,7 @@ namespace LeaFramework.Graphics
 		protected BufferDescription bufferDesc;
 		public int SizeInBytes { get; protected set; }
 		protected string debugName;
-		protected BindFlags binfFlags;
+		protected BindFlags bindFlags;
 		
 		protected BufferUsage bufferType;
 		public Buffer NativeBuffer => buffer;
@@ -28,8 +28,7 @@ namespace LeaFramework.Graphics
 			if (bufferType == BufferUsage.Normal)
 				throw new Exception("Buffer is not dynamic!");
 
-		    DataStream dataStream;
-		    graphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.MapSubresource(buffer, MapMode.WriteDiscard, MapFlags.None, out dataStream);
+            graphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.MapSubresource(buffer, MapMode.WriteDiscard, MapFlags.None, out var dataStream);
 			Utilities.Write(dataStream.DataPointer, data, offset, data.Length);
 			graphicsDevice.NatiDevice1.D3D11Device.ImmediateContext1.UnmapSubresource(buffer, 0);
 		}

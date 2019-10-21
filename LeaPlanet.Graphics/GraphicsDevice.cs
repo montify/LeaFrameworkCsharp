@@ -274,6 +274,14 @@ namespace LeaFramework.Graphics
 			Utilities.Dispose(ref backBuffer);
 			Utilities.Dispose(ref renderTargetView);
 			Utilities.Dispose(ref nativeDevice);
-		}
+
+            Utilities.Dispose(ref currentBlendState);
+            Utilities.Dispose(ref currentGeometryShader);
+            Utilities.Dispose(ref currentIndexBuffer);
+            Utilities.Dispose(ref currentInputLayout);
+            Utilities.Dispose(ref currentVertexShader);
+            Utilities.Dispose(ref currentPixelShader);
+            Utilities.Dispose(ref currentRsState);
+        }
 	}
 }

@@ -17,7 +17,7 @@ namespace LeaFramework.Graphics
 		{
 			base.graphicsDevice = graphicsDevice;
 			this.Format = format;
-			binfFlags = BindFlags.IndexBuffer;
+			bindFlags = BindFlags.IndexBuffer;
 			bufferType = BufferUsage.Normal;
 #if DEBUG
 			base.debugName = debugName;
@@ -27,7 +27,7 @@ namespace LeaFramework.Graphics
 
 		public void SetData<T>(T[] indices) where T : struct
 		{
-			buffer = Buffer.Create(graphicsDevice.NatiDevice1.D3D11Device, binfFlags, indices);
+			buffer = Buffer.Create(graphicsDevice.NatiDevice1.D3D11Device, bindFlags, indices);
 			NativeBuffer.DebugName = debugName;
 		}
 

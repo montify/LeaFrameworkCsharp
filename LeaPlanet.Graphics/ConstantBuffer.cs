@@ -13,14 +13,14 @@ namespace LeaFramework.Graphics
 		{
 			base.graphicsDevice = graphicsDevice;
 			base.bufferType = BufferUsage.Dynamic;
-			base.binfFlags = BindFlags.ConstantBuffer;
+			base.bindFlags = BindFlags.ConstantBuffer;
 		}
 
 		public void Create(int sizeInBytes) 
 		{
 			base.SizeInBytes = sizeInBytes;
 
-			base.bufferDesc.BindFlags = binfFlags;
+			base.bufferDesc.BindFlags = bindFlags;
 			base.bufferDesc.SizeInBytes = sizeInBytes;
 			base.bufferDesc.Usage = ResourceUsage.Dynamic;
 			base.bufferDesc.CpuAccessFlags = CpuAccessFlags.Write;

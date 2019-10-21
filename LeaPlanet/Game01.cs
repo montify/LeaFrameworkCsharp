@@ -1,4 +1,5 @@
-﻿using LeaFramework.Content;
+﻿using System.Windows.Forms.VisualStyles;
+using LeaFramework.Content;
 using LeaFramework.Effect;
 using LeaFramework.Game;
 using LeaFramework.Game.SpriteBatch;
@@ -46,16 +47,16 @@ namespace LeaFramework.PlayGround
 		{
             InputManager.Listen(RenderForm);
 
-            var desc = new RasterizerStateDescription
-            {
-                CullMode = CullMode.Front,
-                FillMode = FillMode.Wireframe,
-                IsMultisampleEnabled = true
-            };
+            //var desc = new RasterizerStateDescription
+            //{
+            //    CullMode = CullMode.Front,
+            //    FillMode = FillMode.Wireframe,
+            //    IsMultisampleEnabled = true
+            //};
 
-            rs = new RasterizerState(GraphicsDevice.NatiDevice1.D3D11Device, desc);
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            sf = new SpriteFont(GraphicsDevice, "Roboto-Black.ttf", 24);
+            //rs = new RasterizerState(GraphicsDevice.NatiDevice1.D3D11Device, desc);
+            //spriteBatch = new SpriteBatch(GraphicsDevice);
+            //sf = new SpriteFont(GraphicsDevice, "Roboto-Black.ttf", 24);
          
 
         }
@@ -63,6 +64,9 @@ namespace LeaFramework.PlayGround
 		public override void Unload()
 		{
 			ContentManager.Instance.Dispose();
+            //spriteBatch.Dispose();
+            //rs.Dispose();
+            //sf.Dispose();
 		}
 		
 		public override void Update(GameTimer gameTime)
@@ -74,9 +78,9 @@ namespace LeaFramework.PlayGround
 		public override void Render(GameTimer gameTime)
 		{
 		   GraphicsDevice.Clear(ClearFlags.RenderTarget | ClearFlags.DepthBuffer, Color.Black);
-           spriteBatch.Begin(Matrix.Identity);
-           spriteBatch.SubmitString(sf, "Test", new Vector2(100,100),Color.White );
-           spriteBatch.End();
+           //spriteBatch.Begin(Matrix.Identity);
+           //spriteBatch.SubmitString(sf, gameTime.TotalTime.ToString(), new Vector2(100,100),Color.White );
+           //spriteBatch.End();
        
 		}
 	}
