@@ -78,13 +78,6 @@
   <ItemGroup>
     <Compile Include="Misc\SpaceCam.cs" />
     <Compile Include="Misc\Vector3Double.cs" />
-    <Compile Include="TerrainSrc\Globals.cs" />
-    <Compile Include="TerrainSrc\IndexBuffers.cs" />
-    <Compile Include="TerrainSrc\QuadMesh.cs" />
-    <Compile Include="TerrainSrc\QuadNode.cs" />
-    <Compile Include="TerrainSrc\QuadNodeExtents.cs" />
-    <Compile Include="TerrainSrc\QuadRenderer.cs" />
-    <Compile Include="TerrainSrc\Terrain.cs" />
     <Compile Include="Triangle.cs" />
     <Compile Include="Game01.cs" />
     <Compile Include="Program.cs" />
